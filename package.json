@@ -1,0 +1,15 @@
+{
+	"name": "wp-codeception",
+	"version": "1.0.0",
+	"description": "",
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"author": "10up Inc",
+	"license": "GPLv2",
+	"devDependencies": {
+		"phantomjs": "^1.9.16",
+		"selenium-server": "^2.45.0"
+	}
+}
