@@ -18,61 +18,51 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC;
+namespace WPCC\Subscriber;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-
-// do nothing if WP_CLI is not available
-if ( ! class_exists( '\WP_CLI_Command' ) ) {
-	return;
-}
+use Codeception\Event\SuiteEvent;
+use Codeception\Events;
 
 /**
- * Performs Codeception tests.
+ * Event listener responsible for bootstrap action call before suite starts running.
  *
  * @since 1.0.0
  * @category WPCC
+ * @package Subscriber
  */
-class CLI extends \WP_CLI_Command {
+class Bootstrap implements \Symfony\Component\EventDispatcher\EventSubscriberInterface {
+
+	use \Codeception\Subscriber\Shared\StaticEvents;
 
 	/**
-	 * Runs Codeception tests.
-	 *
-	 * ### OPTIONS
-	 * 
-	 * <suite>
-	 * : The suite name to run.
-	 *
-	 * <test>
-	 * : The test name to run.
-	 *
-	 * <steps>
-	 * : Show test steps in output.
-	 *
-	 * ### EXAMPLE
-	 *
-	 *     wp composer run
-	 *     wp composer run my_test1
-	 *     wp composer run my_suit1
-	 *
-	 * @synopsis [<suite>] [<test>] [--steps]
+	 * Event subscriptions.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
+	 * @static
 	 * @access public
-	 * @global array $argv Global array of console arguments passed to script.
-	 * @param array $args Unassociated array of arguments passed to this command.
-	 * @param array $assoc_args Associated array of arguments passed to this command.
+	 * @var array
 	 */
-	public function run( $args, $assoc_args ) {
-		global $argv;
+	public static $events = array(
+		Events::SUITE_BEFORE => 'doBootstrap',
+	);
 
-		$new_argv = array_slice( (array) $argv, 1 );
+	/**
+	 * Calls bootstrap action for a suite.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param \Codeception\Event\SuiteEvent $e The event object.
+	 */
+	public function doBootstrap( SuiteEvent $e ) {
+		$settings = $e->getSettings();
+		if ( ! isset( $settings['bootstrap'] ) ) {
+			return;
+		}
 
-		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->add( new \WPCC\Command\Run( 'run' ) );
-		$app->run( new ArgvInput( $new_argv ) );
+		$suite = $e->getSuite();
+		do_action( "wpcc_{$suite->baseName}_bootstrap", $suite, $settings );
 	}
-	
+
 }

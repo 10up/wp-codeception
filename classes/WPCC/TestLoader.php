@@ -20,59 +20,69 @@
 
 namespace WPCC;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-
-// do nothing if WP_CLI is not available
-if ( ! class_exists( '\WP_CLI_Command' ) ) {
-	return;
-}
+use WPCC\TestCase\Cept;
 
 /**
- * Performs Codeception tests.
+ * Tests loader class.
  *
  * @since 1.0.0
  * @category WPCC
  */
-class CLI extends \WP_CLI_Command {
+class TestLoader extends \Codeception\TestLoader {
 
 	/**
-	 * Runs Codeception tests.
-	 *
-	 * ### OPTIONS
-	 * 
-	 * <suite>
-	 * : The suite name to run.
-	 *
-	 * <test>
-	 * : The test name to run.
-	 *
-	 * <steps>
-	 * : Show test steps in output.
-	 *
-	 * ### EXAMPLE
-	 *
-	 *     wp composer run
-	 *     wp composer run my_test1
-	 *     wp composer run my_suit1
-	 *
-	 * @synopsis [<suite>] [<test>] [--steps]
+	 * Loads singular test.
 	 *
 	 * @since 1.0.0
-	 * 
+	 * @throws \Exception when a test format is not recognized.
+	 *
 	 * @access public
-	 * @global array $argv Global array of console arguments passed to script.
-	 * @param array $args Unassociated array of arguments passed to this command.
-	 * @param array $assoc_args Associated array of arguments passed to this command.
+	 * @param string $test The test name.
 	 */
-	public function run( $args, $assoc_args ) {
-		global $argv;
+    public function loadTest( $test ) {
+		foreach ( self::$formats as $format ) {
+			$pattern = sprintf( "~^wpcc_%s_.+~", strtolower( $format ) );
+			if ( preg_match( $pattern, $test ) ) {
+				call_user_func( array( $this, "add$format" ), $test );
+				return;
+			}
+		}
 
-		$new_argv = array_slice( (array) $argv, 1 );
-
-		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->add( new \WPCC\Command\Run( 'run' ) );
-		$app->run( new ArgvInput( $new_argv ) );
+		throw new \Exception( 'Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test' );
 	}
-	
+
+	/**
+	 * Loads multiple tests.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function loadTests() {
+		foreach ( self::$formats as $format ) {
+			$lower_format = strtolower( $format );
+			$tests = apply_filters( "wpcc_{$lower_format}_tests", array() );
+			
+			foreach ( $tests as $test ) {
+				call_user_func( array( $this, "add$format" ), $test );
+			}
+		}
+	}
+
+	/**
+	 * Adds Cept test to the tests list.
+	 *
+	 * @sicne 1.0.0
+	 *
+	 * @access public
+	 * @param string $test The Cept test action name.
+	 */
+    public function addCept( $test ) {
+		$cept = new Cept();
+		$cept->configName( $test );
+		$cept->initConfig();
+
+		$this->tests[] = $cept;
+	}
+
 }

@@ -20,59 +20,34 @@
 
 namespace WPCC;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-
-// do nothing if WP_CLI is not available
-if ( ! class_exists( '\WP_CLI_Command' ) ) {
-	return;
-}
-
 /**
- * Performs Codeception tests.
+ * Suite manager class.
  *
  * @since 1.0.0
  * @category WPCC
  */
-class CLI extends \WP_CLI_Command {
+class SuiteManager extends \Codeception\SuiteManager {
 
 	/**
-	 * Runs Codeception tests.
-	 *
-	 * ### OPTIONS
-	 * 
-	 * <suite>
-	 * : The suite name to run.
-	 *
-	 * <test>
-	 * : The test name to run.
-	 *
-	 * <steps>
-	 * : Show test steps in output.
-	 *
-	 * ### EXAMPLE
-	 *
-	 *     wp composer run
-	 *     wp composer run my_test1
-	 *     wp composer run my_suit1
-	 *
-	 * @synopsis [<suite>] [<test>] [--steps]
+	 * Loads tests to run.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @access public
-	 * @global array $argv Global array of console arguments passed to script.
-	 * @param array $args Unassociated array of arguments passed to this command.
-	 * @param array $assoc_args Associated array of arguments passed to this command.
+	 * @param string $test The test to load.
 	 */
-	public function run( $args, $assoc_args ) {
-		global $argv;
+	public function loadTests( $test = null ) {
+        $testLoader = new TestLoader( $this->settings['path'] );
+		if ( ! empty( $test ) && has_action( $test ) ) {
+            $testLoader->loadTest( $test );
+		} else {
+			$testLoader->loadTests();
+		}
 
-		$new_argv = array_slice( (array) $argv, 1 );
-
-		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->add( new \WPCC\Command\Run( 'run' ) );
-		$app->run( new ArgvInput( $new_argv ) );
+        $tests = $testLoader->getTests();
+		foreach ( $tests as $test ) {
+			$this->addToSuite( $test );
+		}
 	}
-	
+
 }

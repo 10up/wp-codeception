@@ -33,7 +33,7 @@ if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
 }
 
 // do nothing if WP_CLI or Composer dependecies are not installed
-if ( ! defined( 'WP_CLI' ) || ! WP_CLI || ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+if ( ! defined( 'WP_CLI' ) || ! WP_CLI || ! file_exists( __DIR__ . '/vendor/codeception/codeception/autoload.php' ) ) {
 	return;
 }
 
@@ -42,7 +42,7 @@ define( 'WPCC_VERSION', '1.0.0' );
 define( 'WPCC_ABSPATH', __DIR__ );
 
 // load autoloader
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
 
 // register CLI command
 WP_CLI::add_command( 'codeception', '\WPCC\CLI' );
@@ -76,6 +76,7 @@ function wpcc_error_hanlder( $code, $message, $file, $line ) {
 		default: break;
 	}
 
+	debug_print_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 	WP_CLI::error( sprintf( '[%s] %s at %s:%d', $code, $message, $file, $line ) );
 }
 
