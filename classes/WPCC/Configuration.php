@@ -43,14 +43,18 @@ class Configuration extends \Codeception\Configuration {
 			return self::$config;
 		}
 
-		$config = apply_filters( 'wpcc_config', self::$defaultConfig );
+		$config = array(
+			'settings' => array( 'colors' => true ),
+		);
+
+		$config = self::mergeConfigs( self::$defaultConfig, $config );
+		$config = apply_filters( 'wpcc_config', $config );
 		if ( ! isset( $config['paths']['log'] ) ) {
 			$dir = wp_upload_dir();
 			$config['paths']['log'] = $dir['basedir'] . DIRECTORY_SEPARATOR . 'wpcc';
 		}
 
 		$suites = array( /*'unit', 'functional', */'acceptance' );
-		$suites = apply_filters( 'wpcc_suites', $suites ); // do we need it???
 
 		self::$dir = WPCC_ABSPATH;
 		self::$logDir = 'logs';
@@ -125,13 +129,13 @@ class Configuration extends \Codeception\Configuration {
 				'path'       => $path,
 				'modules'    => array(
 					'enabled' => array(
-						'\Codeception\Module\WebDriver',
+						'WebDriver',
 					),
 					'config' => array(
-						'\Codeception\Module\WebDriver' => array(
-							'url'         => home_url( '/' ),
-							'browser'     => 'phantomjs',
-							'window_size' => '1280x768',
+						'WebDriver' => array(
+							'url'          => home_url( '/' ),
+							'browser'      => 'phantomjs',
+							'window_size'  => '1280x768',
 							'capabilities' => array(
 								'phantomjs.binary.path' => $binary,
 							),
