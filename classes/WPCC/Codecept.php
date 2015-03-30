@@ -35,7 +35,7 @@ class Codecept extends \Codeception\Codecept {
 	 *
 	 * @access public
 	 */
-    public function registerSubscribers() {
+	public function registerSubscribers() {
 		// required
 		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\ErrorHandler() );
 		$this->dispatcher->addSubscriber( new \WPCC\Subscriber\Bootstrap() );
@@ -75,7 +75,7 @@ class Codecept extends \Codeception\Codecept {
 	 * @param string $test The test name to run.
 	 */
 	public function run( $suite, $test = null ) {
-        @ini_set( 'memory_limit', apply_filters( 'admin_memory_limit', WP_MAX_MEMORY_LIMIT ) );
+		@ini_set( 'memory_limit', apply_filters( 'admin_memory_limit', WP_MAX_MEMORY_LIMIT ) );
 
 		$settings = Configuration::suiteSettings( $suite, Configuration::config() );
 
@@ -105,7 +105,7 @@ class Codecept extends \Codeception\Codecept {
 	 * @param string $test The test name to run.
 	 * @return \PHPUnit_Framework_TestResult The suite execution results.
 	 */
-    public function runSuite( $settings, $suite, $test = null ) {
+	public function runSuite( $settings, $suite, $test = null ) {
 		$this->result->convertErrorsToExceptions( false );
 
 		$suiteManager = new SuiteManager( $this->dispatcher, $suite, $settings );

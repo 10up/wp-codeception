@@ -20,6 +20,13 @@
 
 namespace WPCC\TestCase;
 
+/**
+ * Test case class for Cept version of tests.
+ *
+ * @since 1.0.0
+ * @category WPCC
+ * @package TestCase
+ */
 class Cept extends \Codeception\TestCase\Cept {
 
 	/**
@@ -69,7 +76,7 @@ class Cept extends \Codeception\TestCase\Cept {
 	 * @access protected
 	 */
 	protected function runTest() {
-        if ( $this->getName() === null ) {
+		if ( $this->getName() === null ) {
 			throw new \PHPUnit_Framework_Exception( 'PHPUnit_Framework_TestCase::$name must not be null.' );
 		}
 
@@ -116,5 +123,5 @@ class Cept extends \Codeception\TestCase\Cept {
 			$this->assertThat( null, new \PHPUnit_Framework_Constraint_Exception( $this->expectedException ) );
 		}
 	}
-	
+
 }

@@ -27,17 +27,17 @@ namespace WPCC;
  * @category WPCC
  */
 class Configuration extends \Codeception\Configuration {
-	
-    /**
-     * Loads global config. When config is already loaded - returns it.
-     *
+
+	/**
+	 * Loads global config. When config is already loaded - returns it.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @static
 	 * @access public
-     * @param null $deprecated
-     * @return array The configuration array.
-     */
+	 * @param null $deprecated
+	 * @return array The configuration array.
+	 */
 	public static function config( $deprecated = null ) {
 		if ( self::$config ) {
 			return self::$config;
@@ -64,19 +64,19 @@ class Configuration extends \Codeception\Configuration {
 		return $config;
 	}
 
-    /**
-     * Returns suite configuration.
-     *
+	/**
+	 * Returns suite configuration.
+	 *
 	 * @since 1.0.0
-     * @throws \Exception When a suite is not loaded.
+	 * @throws \Exception When a suite is not loaded.
 	 *
 	 * @static
 	 * @access public
-     * @param string $suite The suite name.
-     * @param array $config The global config array.
-     * @return array Array of suite settings.
-     */
-    public static function suiteSettings( $suite, $config ) {
+	 * @param string $suite The suite name.
+	 * @param array $config The global config array.
+	 * @return array Array of suite settings.
+	 */
+	public static function suiteSettings( $suite, $config ) {
 		// cut namespace name from suite name
 		if ( $suite != $config['namespace'] ) {
 			$namespace_len = strlen( $config['namespace'] );
@@ -119,10 +119,10 @@ class Configuration extends \Codeception\Configuration {
 	protected static function _getSuiteConfig( $suite ) {
 		$capital_suite = ucfirst( $suite );
 		$path = WPCC_ABSPATH . '/classes/WPCC/' . $capital_suite . '/';
-		
+
 		if ( 'acceptance' == $suite ) {
 			$binary = WPCC_ABSPATH . '/node_modules/phantomjs/bin/phantomjs';
-			
+
 			return array(
 				'class_name' => 'Tester',
 				'namespace'  => "WPCC\\{$capital_suite}",
@@ -148,13 +148,13 @@ class Configuration extends \Codeception\Configuration {
 		return array();
 	}
 
-    /**
+	/**
 	 * Returns all possible suite configurations according environment rules.
 	 * Suite configurations will contain `current_environment` key which
 	 * specifies what environment used.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @static
 	 * @access public
 	 * @param string $suite The suite name.
@@ -171,7 +171,7 @@ class Configuration extends \Codeception\Configuration {
 			$environments[ $env ] = $envConfig
 				? self::mergeConfigs( $settings, $envConfig )
 				: $settings;
-			
+
 			$environments[ $env ]['current_environment'] = $env;
 		}
 

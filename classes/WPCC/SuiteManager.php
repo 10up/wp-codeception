@@ -37,14 +37,14 @@ class SuiteManager extends \Codeception\SuiteManager {
 	 * @param string $test The test to load.
 	 */
 	public function loadTests( $test = null ) {
-        $testLoader = new TestLoader( $this->settings['path'] );
+		$testLoader = new TestLoader( $this->settings['path'] );
 		if ( ! empty( $test ) && has_action( $test ) ) {
-            $testLoader->loadTest( $test );
+			$testLoader->loadTest( $test );
 		} else {
 			$testLoader->loadTests();
 		}
 
-        $tests = $testLoader->getTests();
+		$tests = $testLoader->getTests();
 		foreach ( $tests as $test ) {
 			$this->addToSuite( $test );
 		}

@@ -39,7 +39,7 @@ class TestLoader extends \Codeception\TestLoader {
 	 * @access public
 	 * @param string $test The test name.
 	 */
-    public function loadTest( $test ) {
+	public function loadTest( $test ) {
 		foreach ( self::$formats as $format ) {
 			$pattern = sprintf( "~^wpcc_%s_.+~", strtolower( $format ) );
 			if ( preg_match( $pattern, $test ) ) {
@@ -62,7 +62,7 @@ class TestLoader extends \Codeception\TestLoader {
 		foreach ( self::$formats as $format ) {
 			$lower_format = strtolower( $format );
 			$tests = apply_filters( "wpcc_{$lower_format}_tests", array() );
-			
+
 			foreach ( $tests as $test ) {
 				call_user_func( array( $this, "add$format" ), $test );
 			}
@@ -77,7 +77,7 @@ class TestLoader extends \Codeception\TestLoader {
 	 * @access public
 	 * @param string $test The Cept test action name.
 	 */
-    public function addCept( $test ) {
+	public function addCept( $test ) {
 		$cept = new Cept();
 		$cept->configName( $test );
 		$cept->initConfig();

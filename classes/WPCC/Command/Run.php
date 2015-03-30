@@ -34,16 +34,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Run extends \Codeception\Command\Run {
 
-    /**
-     * Executes Run command
-     * 
+	/**
+	 * Executes Run command
+	 *
 	 * @since 1.0.0
-     * @throws \RuntimeException When a suite is not found.
+	 * @throws \RuntimeException When a suite is not found.
 	 *
 	 * @access public
-     * @param \Symfony\Component\Console\Input\InputInterface $input The input arguments.
-     * @param \Symfony\Component\Console\Output\OutputInterface $output The output interface.
-     */
+	 * @param \Symfony\Component\Console\Input\InputInterface $input The input arguments.
+	 * @param \Symfony\Component\Console\Output\OutputInterface $output The output interface.
+	 */
 	public function execute( InputInterface $input, OutputInterface $output ) {
 		$this->options = $input->getOptions();
 		$this->output = $output;
