@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Codeception
 Plugin URI:
-Description: Registers WP-CLI commands which allows you to execute Codeception tests.
+Description: Registers WP-CLI commands which allow you to execute Codeception tests.
 Author: 10up Inc
 Author URI: https://10up.com/
 Version: 1.0.0-dev
