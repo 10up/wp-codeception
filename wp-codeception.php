@@ -76,8 +76,8 @@ function wpcc_error_hanlder( $code, $message, $file, $line ) {
 		default: break;
 	}
 
-	debug_print_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 	WP_CLI::error( sprintf( '[%s] %s at %s:%d', $code, $message, $file, $line ) );
+	debug_print_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 }
 
 /**
