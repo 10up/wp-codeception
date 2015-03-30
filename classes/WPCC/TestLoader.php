@@ -21,6 +21,8 @@
 namespace WPCC;
 
 use WPCC\TestCase\Cept;
+use WPCC\TestCase\Cest;
+use Codeception\Util\Annotation;
 
 /**
  * Tests loader class.
@@ -83,6 +85,62 @@ class TestLoader extends \Codeception\TestLoader {
 		$cept->initConfig();
 
 		$this->tests[] = $cept;
+	}
+
+	/**
+	 * Adds Cest test to the tests list.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $testClass The Cest class name.
+	 */
+	public function addCest( $testClass ) {
+		if ( ! class_exists( $testClass ) ) {
+			return;
+		}
+		
+		$reflected = new \ReflectionClass( $testClass );
+		if ( $reflected->isAbstract() ) {
+			return;
+		}
+
+		$unit = new $testClass();
+		$methods = get_class_methods( $testClass );
+		foreach ( $methods as $method ) {
+			if ( strpos( $method, '_' ) !== 0 && $method != '__construct' ) {
+				$test = $this->createTestFromCestMethod( $unit, $method, null );
+				if ( $test ) {
+					$this->tests[] = $test;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Creates test from Cest method.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param object $instance The instance of a Cest class.
+	 * @param string $method The method name to create test from.
+	 * @param mixed $deprecated Deprecated parameter.
+	 * @return \WPCC\TestCase\Cest Instance of Cest test.
+	 */
+	protected function createTestFromCestMethod( $instance, $method, $deprecated ) {
+		$class = get_class( $instance );
+
+		$cest = new Cest();
+		$cest->configName( $method );
+		$cest->config( 'testClassInstance', $instance );
+		$cest->config( 'testMethod', $method );
+		$cest->initConfig();
+
+		$cest->getScenario()->env( Annotation::forMethod( $class, $method )->fetchAll( 'env' ) );
+		$cest->setDependencies( \PHPUnit_Util_Test::getDependencies( $class, $method ) );
+		
+		return $cest;
 	}
 
 }
