@@ -45,7 +45,7 @@ class Codecept extends \Codeception\Codecept {
 
 		// optional
 		if ( ! $this->options['silent'] ) {
-			$this->dispatcher->addSubscriber( new \Codeception\Subscriber\Console( $this->options ) );
+			$this->dispatcher->addSubscriber( new \WPCC\Subscriber\Console( $this->options ) );
 		}
 
 		if ( $this->options['fail-fast'] ) {
