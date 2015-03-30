@@ -37,6 +37,52 @@ if ( ! class_exists( '\WP_CLI_Command' ) ) {
 class CLI extends \WP_CLI_Command {
 
 	/**
+	 * Returns full path to the selenium executable file.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @return string The path to the selenium server executable file.
+	 */
+	protected function _get_selenium_executable() {
+		return WPCC_ABSPATH . '/node_modules/selenium-server/bin/selenium';
+	}
+
+	/**
+	 * Checks if selenium server is started and launches it if it isn't.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 */
+	protected function _start_selenium_server() {
+		$selenium = $this->_get_selenium_executable();
+		if ( is_executable( $selenium ) ) {
+			shell_exec( "{$selenium} > /dev/null 2>/dev/null  &" );
+			sleep( 1 ); // wait while selenium server starts properly
+		}
+	}
+
+	/**
+	 * Stops selenium server if it has been launched.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 */
+	protected function _stop_selenium_server() {
+		$pids = false;
+		$selenium = $this->_get_selenium_executable();
+
+		$pids = trim( shell_exec( "pgrep -f {$selenium}" ) );
+		if ( ! empty( $pids ) ) {
+			foreach ( explode( PHP_EOL, (string) $pids ) as $pid ) {
+				shell_exec( "kill -15 {$pid} > /dev/null 2>/dev/null" );
+			}
+		}
+	}
+
+	/**
 	 * Runs Codeception tests.
 	 *
 	 * ### OPTIONS
@@ -68,11 +114,14 @@ class CLI extends \WP_CLI_Command {
 	public function run( $args, $assoc_args ) {
 		global $argv;
 
-		$new_argv = array_slice( (array) $argv, 1 );
+		$this->_start_selenium_server();
 
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
+		$app->setAutoExit( false );
 		$app->add( new \WPCC\Command\Run( 'run' ) );
-		$app->run( new ArgvInput( $new_argv ) );
+		$app->run( new ArgvInput( array_slice( (array) $argv, 1 ) ) );
+
+		$this->_stop_selenium_server();
 	}
 	
 }
