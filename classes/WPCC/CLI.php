@@ -59,7 +59,7 @@ class CLI extends \WP_CLI_Command {
 		$selenium = $this->_get_selenium_executable();
 		if ( is_executable( $selenium ) ) {
 			shell_exec( "{$selenium} > /dev/null 2>/dev/null  &" );
-			sleep( 1 ); // wait while selenium server starts properly
+			sleep( 2 ); // wait while selenium server starts properly
 		}
 	}
 
