@@ -129,10 +129,11 @@ class Configuration extends \Codeception\Configuration {
 				'path'       => $path,
 				'modules'    => array(
 					'enabled' => array(
-						'WebDriver',
+						'\WPCC\Module\WebDriver',
+						'\WPCC\Module\WordPress',
 					),
 					'config' => array(
-						'WebDriver' => array(
+						'\WPCC\Module\WebDriver' => array(
 							'url'          => home_url( '/' ),
 							'browser'      => 'phantomjs',
 							'window_size'  => '1280x768',
