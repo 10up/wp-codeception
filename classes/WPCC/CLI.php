@@ -96,7 +96,10 @@ class CLI extends \WP_CLI_Command {
 	 * : The test name to run.
 	 *
 	 * <steps>
-	 * : Show test steps in output.
+	 * : Determines whether to show test steps in output or not.
+	 *
+	 * <debug>
+	 * : Determines whether to show debug and scenario output or not.
 	 *
 	 * ### EXAMPLE
 	 *
@@ -104,8 +107,9 @@ class CLI extends \WP_CLI_Command {
 	 *     wp codeception run acceptance
 	 *     wp codeception run acceptance my_custom_test
 	 *     wp codeception run --steps
+	 *     wp codeception run --debug
 	 *
-	 * @synopsis [<suite>] [<test>] [--steps]
+	 * @synopsis [<suite>] [<test>] [--steps] [--debug]
 	 *
 	 * @since 1.0.0
 	 * 
@@ -118,6 +122,8 @@ class CLI extends \WP_CLI_Command {
 		global $argv;
 
 		$this->_start_selenium_server();
+
+		do_action( 'wpcc_bootstrap' );
 
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
 		$app->setAutoExit( false );
