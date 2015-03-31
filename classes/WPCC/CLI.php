@@ -57,7 +57,8 @@ class CLI extends \WP_CLI_Command {
 	 */
 	protected function _start_selenium_server() {
 		$selenium = $this->_get_selenium_executable();
-		if ( is_executable( $selenium ) ) {
+		$pids = explode( PHP_EOL, trim( shell_exec( "pgrep -f {$selenium}" ) ) );
+		if ( is_executable( $selenium ) && count( $pids ) < 2 ) {
 			shell_exec( "{$selenium} > /dev/null 2>/dev/null  &" );
 			sleep( 2 ); // wait while selenium server starts properly
 		}
@@ -71,9 +72,7 @@ class CLI extends \WP_CLI_Command {
 	 * @access protected
 	 */
 	protected function _stop_selenium_server() {
-		$pids = false;
 		$selenium = $this->_get_selenium_executable();
-
 		$pids = trim( shell_exec( "pgrep -f {$selenium}" ) );
 		if ( ! empty( $pids ) ) {
 			foreach ( explode( PHP_EOL, (string) $pids ) as $pid ) {
@@ -101,6 +100,9 @@ class CLI extends \WP_CLI_Command {
 	 * <debug>
 	 * : Determines whether to show debug and scenario output or not.
 	 *
+	 * <keep-alive>
+	 * : Determines whether to halt selenium server on shutdown or not.
+	 *
 	 * ### EXAMPLE
 	 *
 	 *     wp codeception run
@@ -109,7 +111,7 @@ class CLI extends \WP_CLI_Command {
 	 *     wp codeception run --steps
 	 *     wp codeception run --debug
 	 *
-	 * @synopsis [<suite>] [<test>] [--steps] [--debug]
+	 * @synopsis [<suite>] [<test>] [--steps] [--debug] [--keep-alive]
 	 *
 	 * @since 1.0.0
 	 * 
@@ -121,6 +123,12 @@ class CLI extends \WP_CLI_Command {
 	public function run( $args, $assoc_args ) {
 		global $argv;
 
+		$argv_input = array_slice( (array) $argv, 1 );
+		$keep_alive_index = array_search( '--keep-alive', $argv_input );
+		if ( false !== $keep_alive_index ) {
+			unset( $argv_input[ $keep_alive_index ] );
+		}
+
 		$this->_start_selenium_server();
 
 		do_action( 'wpcc_bootstrap' );
@@ -128,9 +136,11 @@ class CLI extends \WP_CLI_Command {
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
 		$app->setAutoExit( false );
 		$app->add( new \WPCC\Command\Run( 'run' ) );
-		$app->run( new ArgvInput( array_slice( (array) $argv, 1 ) ) );
+		$app->run( new ArgvInput( $argv_input ) );
 
-		$this->_stop_selenium_server();
+		if ( empty( $assoc_args['keep-alive'] ) ) {
+			$this->_stop_selenium_server();
+		}
 	}
 	
 }
