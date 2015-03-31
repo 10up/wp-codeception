@@ -88,7 +88,9 @@ class CLI extends \WP_CLI_Command {
 	 * ### OPTIONS
 	 * 
 	 * <suite>
-	 * : The suite name to run.
+	 * : The suite name to run. There are three types of suites available to
+	 * use: unit, functional and acceptance, but currently only acceptance tests
+	 * are supported.
 	 *
 	 * <test>
 	 * : The test name to run.
@@ -98,9 +100,10 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * ### EXAMPLE
 	 *
-	 *     wp composer run
-	 *     wp composer run my_test1
-	 *     wp composer run my_suit1
+	 *     wp codeception run
+	 *     wp codeception run acceptance
+	 *     wp codeception run acceptance my_custom_test
+	 *     wp codeception run --steps
 	 *
 	 * @synopsis [<suite>] [<test>] [--steps]
 	 *
