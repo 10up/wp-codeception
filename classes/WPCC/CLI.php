@@ -76,6 +76,32 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Executes command.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access private
+	 */
+	private function _execute_command() {
+		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
+		$app->add( new \Codeception\Command\Build( 'build' ) );
+		$app->add( new \Codeception\Command\Console( 'console' ) );
+		$app->add( new \Codeception\Command\Bootstrap( 'bootstrap' ) );
+		$app->add( new \Codeception\Command\GenerateCept( 'generate-cept' ) );
+		$app->add( new \Codeception\Command\GenerateCest( 'generate-cest' ) );
+		$app->add( new \Codeception\Command\GenerateTest( 'generate-test' ) );
+		$app->add( new \Codeception\Command\GeneratePhpUnit( 'generate-phpunit' ) );
+		$app->add( new \Codeception\Command\GenerateSuite( 'generate-suite' ) );
+		$app->add( new \Codeception\Command\GenerateHelper( 'generate-helper' ) );
+		$app->add( new \Codeception\Command\GenerateScenarios( 'generate-scenarios' ) );
+		$app->add( new \Codeception\Command\Clean( 'clean' ) );
+		$app->add( new \Codeception\Command\GenerateGroup( 'generate-group' ) );
+		$app->add( new \Codeception\Command\GeneratePageObject( 'generate-pageobject' ) );
+		$app->add( new \Codeception\Command\GenerateStepObject( 'generate-stepobject' ) );
+		$app->run( new ArgvInput() );
+	}
+
+	/**
 	 * Creates default config, tests directory and sample suites for current
 	 * project. Use this command to start building a test suite.
 	 *
@@ -91,7 +117,7 @@ class CLI extends \WP_CLI_Command {
 	 * : Creates tests with provided namespace for actor classes and helpers.
 	 *
 	 * <actor>
-	 * : Sets actor name to have Test{NAME} actor in tests.
+	 * : Sets actor name to create {SUITE}{NAME} actor class.
 	 *
 	 * <path>
 	 * : Sets path to a project, where tests should be placed.
@@ -113,10 +139,37 @@ class CLI extends \WP_CLI_Command {
 	 * @param array $assoc_args Associated arguments passed to the command.
 	 */
 	public function bootstrap( $args, $assoc_args ) {
-		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->add( new \Codeception\Command\Build( 'build' ) );
-		$app->add( new \Codeception\Command\Bootstrap( 'bootstrap' ) );
-		$app->run( new ArgvInput() );
+		$this->_execute_command();
 	}
-	
+
+	/**
+	 * Creates new test suite. Requires suite name and actor name.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name to create.
+	 *
+	 * <actor>
+	 * : The actor name for the suite.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate:suite api
+	 *     wp codeception generate:suite integration Code
+	 *     wp codeception generate:suite frontend Front
+	 *
+	 * @subcommand generate-suite
+	 * @synopsis <suite> [<actor>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_suite( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
 }
