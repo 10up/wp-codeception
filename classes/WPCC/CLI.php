@@ -131,11 +131,9 @@ class CLI extends \WP_CLI_Command {
 
 		$this->_start_selenium_server();
 
-		do_action( 'wpcc_bootstrap' );
-
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
 		$app->setAutoExit( false );
-		$app->add( new \WPCC\Command\Run( 'run' ) );
+		$app->add( new \Codeception\Command\Run( 'run' ) );
 		$app->run( new ArgvInput( $argv_input ) );
 
 		if ( empty( $assoc_args['keep-alive'] ) ) {
