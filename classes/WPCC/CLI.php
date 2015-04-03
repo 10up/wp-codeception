@@ -21,7 +21,7 @@
 namespace WPCC;
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
+use WPCC\Component\Console\Input\ArgvInput;
 
 // do nothing if WP_CLI is not available
 if ( ! class_exists( '\WP_CLI_Command' ) ) {
@@ -35,51 +35,6 @@ if ( ! class_exists( '\WP_CLI_Command' ) ) {
  * @category WPCC
  */
 class CLI extends \WP_CLI_Command {
-
-	/**
-	 * Returns full path to the selenium executable file.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access protected
-	 * @return string The path to the selenium server executable file.
-	 */
-	protected function _get_selenium_executable() {
-		return WPCC_ABSPATH . '/node_modules/selenium-server/bin/selenium';
-	}
-
-	/**
-	 * Checks if selenium server is started and launches it if it isn't.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access protected
-	 */
-	protected function _start_selenium_server() {
-		$selenium = $this->_get_selenium_executable();
-		$pids = explode( PHP_EOL, trim( shell_exec( "pgrep -f {$selenium}" ) ) );
-		if ( is_executable( $selenium ) && count( $pids ) < 2 ) {
-			shell_exec( "{$selenium} > /dev/null 2>/dev/null  &" );
-			sleep( 2 ); // wait while selenium server starts properly
-		}
-	}
-
-	/**
-	 * Stops selenium server if it has been launched.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access protected
-	 */
-	protected function _stop_selenium_server() {
-		$selenium = $this->_get_selenium_executable();
-		$pids = trim( shell_exec( "pgrep -f {$selenium}" ) );
-		if ( ! empty( $pids ) ) {
-			foreach ( explode( PHP_EOL, (string) $pids ) as $pid ) {
-				shell_exec( "kill -15 {$pid} > /dev/null 2>/dev/null" );
-			}
-		}
-	}
 
 	/**
 	 * Runs Codeception tests.
@@ -100,45 +55,68 @@ class CLI extends \WP_CLI_Command {
 	 * <debug>
 	 * : Determines whether to show debug and scenario output or not.
 	 *
-	 * <keep-alive>
-	 * : Determines whether to halt selenium server on shutdown or not.
-	 *
 	 * ### EXAMPLE
 	 *
 	 *     wp codeception run
-	 *     wp codeception run acceptance
-	 *     wp codeception run acceptance my_custom_test
 	 *     wp codeception run --steps
 	 *     wp codeception run --debug
 	 *
-	 * @synopsis [<suite>] [<test>] [--steps] [--debug] [--keep-alive]
+	 * @synopsis [<suite>] [<test>] [--steps] [--debug]
 	 *
 	 * @since 1.0.0
 	 * 
 	 * @access public
-	 * @global array $argv Global array of console arguments passed to script.
 	 * @param array $args Unassociated array of arguments passed to this command.
 	 * @param array $assoc_args Associated array of arguments passed to this command.
 	 */
 	public function run( $args, $assoc_args ) {
-		global $argv;
-
-		$argv_input = array_slice( (array) $argv, 1 );
-		$keep_alive_index = array_search( '--keep-alive', $argv_input );
-		if ( false !== $keep_alive_index ) {
-			unset( $argv_input[ $keep_alive_index ] );
-		}
-
-		$this->_start_selenium_server();
-
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->setAutoExit( false );
 		$app->add( new \Codeception\Command\Run( 'run' ) );
-		$app->run( new ArgvInput( $argv_input ) );
+		$app->run( new ArgvInput() );
+	}
 
-		if ( empty( $assoc_args['keep-alive'] ) ) {
-			$this->_stop_selenium_server();
-		}
+	/**
+	 * Creates default config, tests directory and sample suites for current
+	 * project. Use this command to start building a test suite.
+	 *
+	 * By default it will create 3 suites acceptance, functional, and unit. To
+	 * customize run this command with --customize option.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <customize>
+	 * : Sets manually actors and suite names during setup.
+	 *
+	 * <namespace>
+	 * : Creates tests with provided namespace for actor classes and helpers.
+	 *
+	 * <actor>
+	 * : Sets actor name to have Test{NAME} actor in tests.
+	 *
+	 * <path>
+	 * : Sets path to a project, where tests should be placed.
+	 * 
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception bootstrap
+	 *     wp codeception bootstrap --customize
+	 *     wp codeception bootstrap --namespace="Frontend\Tests"
+	 *     wp codeception bootstrap --actor=Tester
+	 *     wp codeception bootstrap path/to/the/project --customize
+	 *
+	 * @synopsis [<path>] [--customize] [--namespace=<namespace>] [--actor=<actor>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function bootstrap( $args, $assoc_args ) {
+		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
+		$app->add( new \Codeception\Command\Build( 'build' ) );
+		$app->add( new \Codeception\Command\Bootstrap( 'bootstrap' ) );
+		$app->run( new ArgvInput() );
 	}
 	
 }
