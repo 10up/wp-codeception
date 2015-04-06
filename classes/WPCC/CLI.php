@@ -334,4 +334,32 @@ class CLI extends \WP_CLI_Command {
 		$this->_execute_command();
 	}
 
+	/**
+	 * Creates an empty Helper class.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <name>
+	 * : The hlper name to create.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-helper MyHelper
+	 *
+	 * @subcommand generate-helper
+	 * @synopsis <name> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_helper( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
 }
