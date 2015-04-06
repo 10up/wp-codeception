@@ -44,5 +44,6 @@ define( 'WPCC_ABSPATH', __DIR__ );
 // load autoloader
 require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
 
-// register CLI command
+// register CLI commands
 WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
+WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );

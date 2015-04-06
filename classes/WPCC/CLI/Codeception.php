@@ -33,6 +33,7 @@ if ( ! class_exists( '\WP_CLI_Command' ) ) {
  *
  * @since 1.0.0
  * @category WPCC
+ * @package CLI
  */
 class Codeception extends \WP_CLI_Command {
 
