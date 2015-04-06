@@ -302,4 +302,36 @@ class CLI extends \WP_CLI_Command {
 		$this->_execute_command();
 	}
 
+	/**
+	 * Creates a skeleton for unit test as in classical PHPUnit.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name where to add a new test.
+	 *
+	 * <class>
+	 * : The name for a new test class.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-phpunit unit User
+	 *     wp codeception generate-phpunit unit "App\User"
+	 *
+	 * @subcommand generate-phpunit
+	 * @synopsis <suite> <class> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_phpunit( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
 }
