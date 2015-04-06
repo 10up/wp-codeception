@@ -71,7 +71,7 @@ class CLI extends \WP_CLI_Command {
 	 */
 	public function run( $args, $assoc_args ) {
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->add( new \Codeception\Command\Run( 'run' ) );
+		$app->add( new \WPCC\Command\Run( 'run' ) );
 		$app->run( new ArgvInput() );
 	}
 
