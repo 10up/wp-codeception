@@ -220,9 +220,9 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * ### EXAMPLE
 	 *
-	 *     wp codeception generate-cept acceptance Login
-	 *     wp codeception generate-cept functional Front
-	 *     wp codeception generate-cept unit subdir/subdir/testnameCept.php
+	 *     wp codeception generate-cept suite Login
+	 *     wp codeception generate-cept suite Front
+	 *     wp codeception generate-cept suite subdir/subdir/testnameCept.php
 	 *
 	 * @subcommand generate-cept
 	 * @synopsis <suite> <test> [--config=<config>]
@@ -253,9 +253,9 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * ### EXAMPLE
 	 *
-	 *     wp codeception generate-cest acceptance Login
-	 *     wp codeception generate-cest functional subdir/subdir/testnameCest.php
-	 *     wp codeception generate-cest unit "App\Login"
+	 *     wp codeception generate-cest suite Login
+	 *     wp codeception generate-cest suite subdir/subdir/testnameCest.php
+	 *     wp codeception generate-cest suite "App\Login"
 	 *
 	 * @subcommand generate-cest
 	 * @synopsis <suite> <class> [--config=<config>]
@@ -267,6 +267,38 @@ class CLI extends \WP_CLI_Command {
 	 * @param array $assoc_args Associated arguments passed to the command.
 	 */
 	public function generate_cest( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
+	/**
+	 * Creates a skeleton for Unit Test that extends \Codeception\TestCase\Test class.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name where to add a new test.
+	 *
+	 * <class>
+	 * : The name for a new test class.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-test unit User
+	 *     wp codeception generate-test unit "App\User"
+	 *
+	 * @subcommand generate-test
+	 * @synopsis <suite> <class> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_test( $args, $assoc_args ) {
 		$this->_execute_command();
 	}
 
