@@ -18,7 +18,7 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC;
+namespace WPCC\CLI;
 
 use Symfony\Component\Console\Application;
 use WPCC\Component\Console\Input\ArgvInput;
@@ -34,7 +34,7 @@ if ( ! class_exists( '\WP_CLI_Command' ) ) {
  * @since 1.0.0
  * @category WPCC
  */
-class CLI extends \WP_CLI_Command {
+class Codeception extends \WP_CLI_Command {
 
 	/**
 	 * Runs Codeception tests.

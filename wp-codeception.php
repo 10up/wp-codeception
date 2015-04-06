@@ -45,4 +45,4 @@ define( 'WPCC_ABSPATH', __DIR__ );
 require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
 
 // register CLI command
-WP_CLI::add_command( 'codeception', '\WPCC\CLI' );
+WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
