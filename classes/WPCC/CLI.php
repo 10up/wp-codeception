@@ -143,7 +143,7 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Creates new group class. 
+	 * Creates a new group class.
 	 *
 	 * ### OPTIONS
 	 *
@@ -172,7 +172,7 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Creates new test suite.
+	 * Creates a new test suite.
 	 *
 	 * ### OPTIONS
 	 *
@@ -201,6 +201,38 @@ class CLI extends \WP_CLI_Command {
 	 * @param array $assoc_args Associated arguments passed to the command.
 	 */
 	public function generate_suite( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
+	/**
+	 * Creates a new Cept (scenario-driven test) file.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name where to add a new Cept.
+	 *
+	 * <test>
+	 * : The name for a new Cept file.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-cept acceptance Login
+	 *     wp codeception generate-cept unit Front
+	 *
+	 * @subcommand generate-cept
+	 * @synopsis <suite> <test> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_cept( $args, $assoc_args ) {
 		$this->_execute_command();
 	}
 
