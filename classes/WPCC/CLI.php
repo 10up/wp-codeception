@@ -143,7 +143,36 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Creates new test suite. Requires suite name and actor name.
+	 * Creates new group class. 
+	 *
+	 * ### OPTIONS
+	 *
+	 * <group>
+	 * : The group class name to create.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-group Admin
+	 *     wp codeception generate-group Admin --config=/path/to/config.yml
+	 *
+	 * @subcommand generate-group
+	 * @synopsis <group> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_group( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
+	/**
+	 * Creates new test suite.
 	 *
 	 * ### OPTIONS
 	 *
@@ -153,14 +182,17 @@ class CLI extends \WP_CLI_Command {
 	 * <actor>
 	 * : The actor name for the suite.
 	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
 	 * ### EXAMPLE
 	 *
-	 *     wp codeception generate:suite api
-	 *     wp codeception generate:suite integration Code
-	 *     wp codeception generate:suite frontend Front
+	 *     wp codeception generate-suite api
+	 *     wp codeception generate-suite integration Code
+	 *     wp codeception generate-suite frontend Front
 	 *
 	 * @subcommand generate-suite
-	 * @synopsis <suite> [<actor>]
+	 * @synopsis <suite> [<actor>] [--config=<config>]
 	 *
 	 * @since 1.0.0
 	 *
