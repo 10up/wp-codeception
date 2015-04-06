@@ -427,4 +427,28 @@ class CLI extends \WP_CLI_Command {
 		$this->_execute_command();
 	}
 
+	/**
+	 * Cleans output directory.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception clean --config=/path/to/the/config.yml
+	 *
+	 * @synopsis [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function clean( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
 }
