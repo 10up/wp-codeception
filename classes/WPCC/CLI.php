@@ -221,7 +221,8 @@ class CLI extends \WP_CLI_Command {
 	 * ### EXAMPLE
 	 *
 	 *     wp codeception generate-cept acceptance Login
-	 *     wp codeception generate-cept unit Front
+	 *     wp codeception generate-cept functional Front
+	 *     wp codeception generate-cept unit subdir/subdir/testnameCept.php
 	 *
 	 * @subcommand generate-cept
 	 * @synopsis <suite> <test> [--config=<config>]
@@ -233,6 +234,39 @@ class CLI extends \WP_CLI_Command {
 	 * @param array $assoc_args Associated arguments passed to the command.
 	 */
 	public function generate_cept( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
+	/**
+	 * Creates a new Cest (scenario-driven object-oriented test) file.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name where to add a new Cest.
+	 *
+	 * <class>
+	 * : The name for a new Cest class.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-cest acceptance Login
+	 *     wp codeception generate-cest functional subdir/subdir/testnameCest.php
+	 *     wp codeception generate-cest unit "App\Login"
+	 *
+	 * @subcommand generate-cest
+	 * @synopsis <suite> <class> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_cest( $args, $assoc_args ) {
 		$this->_execute_command();
 	}
 
