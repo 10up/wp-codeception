@@ -363,6 +363,45 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name to create scenarios for.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * <path>
+	 * : The specified path as destination instead of default.
+	 *
+	 * <format>
+	 * : Specifies output format: html or text (default).
+	 *
+	 * <single-file>
+	 * : Indicates to render all scenarios to only one file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-scenarios acceptance
+	 *     wp codeception generate-scenarios acceptance --format html
+	 *     wp codeception generate-scenarios acceptance --path doc
+	 *
+	 * @subcommand generate-scenarios
+	 * @synopsis <suite> [--config=<config>] [--path=<path>] [--format=<format>] [--single-file]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_scenarios( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
+	/**
 	 * Creates a new PageObject class.
 	 *
 	 * ### OPTIONS
