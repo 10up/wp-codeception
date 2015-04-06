@@ -98,7 +98,7 @@ class Run extends \Codeception\Command\Run {
 		}
 
 		if ( $test ) {
-			$filter = $this->matchFilteredTestName( $test );
+			$filter = $this->matchFilteredTestNameEx( $test );
 			$userOptions['filter'] = $filter;
 		}
 
@@ -132,6 +132,25 @@ class Run extends \Codeception\Command\Run {
 				exit( 1 );
 			}
 		}
+	}
+
+	/**
+	 * Overriden version of private function.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param string $path The test name.
+	 * @return string The filtered test name on success, otherwise NULL.
+	 */
+    protected function matchFilteredTestNameEx( &$path ) {
+		$test_parts = explode( ':', $path );
+		if ( count( $test_parts ) > 1 ) {
+			list( $path, $filter ) = $test_parts;
+			return $filter;
+		}
+
+		return null;
 	}
 
 }
