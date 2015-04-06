@@ -362,4 +362,69 @@ class CLI extends \WP_CLI_Command {
 		$this->_execute_command();
 	}
 
+	/**
+	 * Creates a new PageObject class.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name where to add a new page object.
+	 *
+	 * <page>
+	 * : The page object name to create.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-pageobject acceptance Login
+	 *
+	 * @subcommand generate-pageobject
+	 * @synopsis <suite> <page> [--config=<config>]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_pageobject( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
+	/**
+	 * Creates a new StepObject class.
+	 *
+	 * ### OPTIONS
+	 *
+	 * <suite>
+	 * : The suite name where to add a new step object.
+	 *
+	 * <step>
+	 * : The step object name to create.
+	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * <silent>
+	 * : Determines whether or not to skip verification questions.
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp codeception generate-stepobject acceptance AdminSteps
+	 *
+	 * @subcommand generate-stepobject
+	 * @synopsis <suite> <step> [--config=<config>] [--silent]
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated arguments passed to the command.
+	 * @param array $assoc_args Associated arguments passed to the command.
+	 */
+	public function generate_stepobject( $args, $assoc_args ) {
+		$this->_execute_command();
+	}
+
 }
