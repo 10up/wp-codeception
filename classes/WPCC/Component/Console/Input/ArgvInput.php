@@ -18,51 +18,37 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC\Subscriber;
+namespace WPCC\Component\Console\Input;
 
-use Codeception\Event\SuiteEvent;
-use Codeception\Events;
+use \Symfony\Component\Console\Input\InputDefinition;
 
 /**
- * Event listener responsible for bootstrap action call before suite starts running.
+ * ArgvInput represents an input coming from the CLI arguments.
  *
  * @since 1.0.0
  * @category WPCC
- * @package Subscriber
+ * @package Component
+ * @subpackage Console
  */
-class Bootstrap implements \Symfony\Component\EventDispatcher\EventSubscriberInterface {
-
-	use \Codeception\Subscriber\Shared\StaticEvents;
+class ArgvInput extends \Symfony\Component\Console\Input\ArgvInput {
 
 	/**
-	 * Event subscriptions.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @static
-	 * @access public
-	 * @var array
-	 */
-	public static $events = array(
-		Events::SUITE_BEFORE => 'doBootstrap',
-	);
-
-	/**
-	 * Calls bootstrap action for a suite.
+	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param \Codeception\Event\SuiteEvent $e The event object.
+	 * @global array $argv Global array of console arguments passed to script.
+	 * @param array $args An array of parameters from the CLI (in the argv format).
+	 * @param \Symfony\Component\Console\Input\InputDefinition $definition Input definition instance.
 	 */
-	public function doBootstrap( SuiteEvent $e ) {
-		$settings = $e->getSettings();
-		if ( ! isset( $settings['bootstrap'] ) ) {
-			return;
+	public function __construct( array $args = null, InputDefinition $definition = null ) {
+		global $argv;
+		if ( is_null( $args ) ) {
+			$args = array_slice( (array) $argv, 1 );
 		}
 
-		$suite = $e->getSuite();
-		do_action( "wpcc_{$suite->baseName}_bootstrap", $suite, $settings );
+		parent::__construct( $args, $definition );
 	}
 
 }

@@ -21,7 +21,7 @@
 namespace WPCC\Command;
 
 use WPCC\Codecept;
-use WPCC\Configuration;
+use Codeception\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -53,9 +53,11 @@ class Run extends \Codeception\Command\Run {
 		if ( ! $this->options['colors'] ) {
 			$this->options['colors'] = $config['settings']['colors'];
 		}
+
 		if ( ! $this->options['silent'] ) {
-			$this->output->writeln( Codecept::versionString() . PHP_EOL . "Powered by " . \PHPUnit_Runner_Version::getVersionString() );
+			$this->output->writeln( Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString() );
 		}
+
 		if ( $this->options['debug'] ) {
 			$this->output->setVerbosity( OutputInterface::VERBOSITY_VERY_VERBOSE );
 		}
@@ -63,7 +65,7 @@ class Run extends \Codeception\Command\Run {
 		$userOptions = array_intersect_key( $this->options, array_flip( $this->passedOptionKeys( $input ) ) );
 		$userOptions = array_merge( $userOptions, $this->booleanOptions( $input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html' ] ) );
 		$userOptions['verbosity'] = $this->output->getVerbosity();
-		$userOptions['interactive'] = !$input->hasParameterOption( array( '--no-interaction', '-n' ) );
+		$userOptions['interactive'] = ! $input->hasParameterOption( array( '--no-interaction', '-n' ) );
 
 		if ( $this->options['no-colors'] ) {
 			$userOptions['colors'] = false;
@@ -77,7 +79,7 @@ class Run extends \Codeception\Command\Run {
 		if ( $this->options['report'] ) {
 			$userOptions['silent'] = true;
 		}
-		if ( $this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] ) {
+		if ( $this->options['coverage-xml'] || $this->options['coverage-html'] || $this->options['coverage-text'] ) {
 			$this->options['coverage'] = true;
 		}
 
@@ -96,7 +98,7 @@ class Run extends \Codeception\Command\Run {
 		}
 
 		if ( $test ) {
-			$filter = $this->matchFilteredTestName( $test );
+			$filter = $this->matchFilteredTestNameEx( $test );
 			$userOptions['filter'] = $filter;
 		}
 
@@ -117,17 +119,38 @@ class Run extends \Codeception\Command\Run {
 			}
 
 			if ( $this->executed === 0 ) {
-				throw new \RuntimeException( sprintf( "Suite '%s' could not be found", implode( ', ', $suites ) ) );
+				throw new \RuntimeException(
+				sprintf( "Suite '%s' could not be found", implode( ', ', $suites ) )
+				);
 			}
 		}
 
 		$this->codecept->printResult();
 
 		if ( ! $input->getOption( 'no-exit' ) ) {
-			if ( !$this->codecept->getResult()->wasSuccessful() ) {
+			if ( ! $this->codecept->getResult()->wasSuccessful() ) {
 				exit( 1 );
 			}
 		}
+	}
+
+	/**
+	 * Overriden version of private function.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param string $path The test name.
+	 * @return string The filtered test name on success, otherwise NULL.
+	 */
+	protected function matchFilteredTestNameEx( &$path ) {
+		$test_parts = explode( ':', $path );
+		if ( count( $test_parts ) > 1 ) {
+			list( $path, $filter ) = $test_parts;
+			return $filter;
+		}
+
+		return null;
 	}
 
 }

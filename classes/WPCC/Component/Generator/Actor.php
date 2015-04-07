@@ -18,15 +18,32 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC\Module;
+namespace WPCC\Component\Generator;
+
+use WPCC\Configuration;
 
 /**
- * WordPress module.
+ * Generates actor classes based on provided configuration.
  *
  * @since 1.0.0
  * @category WPCC
- * @package Module
+ * @package Component
+ * @subpackage Generator
  */
-class WordPress extends \Codeception\Module {
+class Actor extends \Codeception\Lib\Generator\Actor {
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $settings Suite settings.
+	 */
+	public function __construct( $settings ) {
+		$this->settings = $settings;
+		$this->modules = Configuration::modules( $settings );
+		$this->actions = Configuration::actions( $this->modules );
+	}
 
 }

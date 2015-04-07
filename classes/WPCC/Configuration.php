@@ -20,6 +20,8 @@
 
 namespace WPCC;
 
+use Codeception\Exception\Configuration as ConfigurationException;
+
 /**
  * Configuration class.
  *
@@ -29,154 +31,43 @@ namespace WPCC;
 class Configuration extends \Codeception\Configuration {
 
 	/**
-	 * Loads global config. When config is already loaded - returns it.
+	 * Creates a new instance of a module and configures it. Module class is
+	 * searched and resolves according following rules:
+	 *
+	 * 1. if "class" element is fully qualified class name, it will be taken to create module;
+	 * 2. module class will be searched under default namespace, according $namespace parameter: $namespace . '\Codeception\Module\' . $class;
+	 * 3. module class will be searched under Codeception and WPCC module namespace, that are "\Codeception\Module" and "\WPCC\Module".
 	 *
 	 * @since 1.0.0
+	 * @throws \Codeception\Exception\Configuration
 	 *
-	 * @static
-	 * @access public
-	 * @param null $deprecated
-	 * @return array The configuration array.
+	 * @param string $class The module class name.
+	 * @param array $config The module configuration.
+	 * @param string $namespace The default namespace for module.
+	 * @return \Codeception\Module The module instance.
 	 */
-	public static function config( $deprecated = null ) {
-		if ( self::$config ) {
-			return self::$config;
+	public static function createModule( $class, $config, $namespace = '' ) {
+		$hasNamespace = (mb_strpos( $class, '\\' ) !== false);
+
+		if ( $hasNamespace ) {
+			return new $class( $config );
 		}
 
-		$config = array(
-			'settings' => array( 'colors' => true ),
-		);
+		// try find module under users suite namespace setting
+		$className = $namespace . '\\Codeception\\Module\\' . $class;
 
-		$config = self::mergeConfigs( self::$defaultConfig, $config );
-		$config = apply_filters( 'wpcc_config', $config );
-		if ( ! isset( $config['paths']['log'] ) ) {
-			$dir = wp_upload_dir();
-			$config['paths']['log'] = $dir['basedir'] . DIRECTORY_SEPARATOR . 'wpcc';
-		}
-
-		$suites = array( /*'unit', 'functional', */'acceptance' );
-
-		self::$dir = WPCC_ABSPATH;
-		self::$logDir = 'logs';
-		self::$config = $config;
-		self::$suites = $suites;
-
-		return $config;
-	}
-
-	/**
-	 * Returns suite configuration.
-	 *
-	 * @since 1.0.0
-	 * @throws \Exception When a suite is not loaded.
-	 *
-	 * @static
-	 * @access public
-	 * @param string $suite The suite name.
-	 * @param array $config The global config array.
-	 * @return array Array of suite settings.
-	 */
-	public static function suiteSettings( $suite, $config ) {
-		// cut namespace name from suite name
-		if ( $suite != $config['namespace'] ) {
-			$namespace_len = strlen( $config['namespace'] );
-			if ( substr( $suite, 0, $namespace_len ) == $config['namespace'] ) {
-				$suite = substr( $suite, $namespace_len );
+		if ( ! @class_exists( $className ) ) {
+			// fallback to default namespace
+			$className = '\\WPCC\\Module\\' . $class;
+			if ( ! @class_exists( $className ) ) {
+				$className = '\\Codeception\\Module\\' . $class;
+				if ( ! @class_exists( $className ) ) {
+					throw new ConfigurationException( $class . ' could not be found and loaded' );
+				}
 			}
 		}
 
-		if ( ! in_array( $suite, self::$suites ) ) {
-			throw new \Exception( "Suite $suite was not loaded" );
-		}
-
-		$global = $config['settings'];
-		$keys = array( 'modules', 'coverage', 'namespace', 'groups', 'env' );
-		foreach ( $keys as $key ) {
-			if ( isset( $config[$key] ) ) {
-				$global[$key] = $config[$key];
-			}
-		}
-
-		$local = self::_getSuiteConfig( $suite );
-		$local = apply_filters( "wpcc_{$suite}_suite_config", $local );
-
-		$settings = self::mergeConfigs( self::$defaultSuiteSettings, $global );
-		$settings = self::mergeConfigs( $settings, $local );
-
-		return $settings;
-	}
-
-	/**
-	 * Returns basic configuration for a suite.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @static
-	 * @access public
-	 * @param string $suite The suite name.
-	 * @return array The suite configuration array.
-	 */
-	protected static function _getSuiteConfig( $suite ) {
-		$capital_suite = ucfirst( $suite );
-		$path = WPCC_ABSPATH . '/classes/WPCC/' . $capital_suite . '/';
-
-		if ( 'acceptance' == $suite ) {
-			$binary = WPCC_ABSPATH . '/node_modules/phantomjs/bin/phantomjs';
-
-			return array(
-				'class_name' => 'Tester',
-				'namespace'  => "WPCC\\{$capital_suite}",
-				'path'       => $path,
-				'modules'    => array(
-					'enabled' => array(
-						'\WPCC\Module\WebDriver',
-						'\WPCC\Module\WordPress',
-					),
-					'config' => array(
-						'\WPCC\Module\WebDriver' => array(
-							'url'          => home_url( '/' ),
-							'browser'      => 'phantomjs',
-							'window_size'  => '1280x768',
-							'capabilities' => array(
-								'phantomjs.binary.path' => $binary,
-							),
-						),
-					),
-				),
-			);
-		}
-
-		return array();
-	}
-
-	/**
-	 * Returns all possible suite configurations according environment rules.
-	 * Suite configurations will contain `current_environment` key which
-	 * specifies what environment used.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @static
-	 * @access public
-	 * @param string $suite The suite name.
-	 * @return array Array of all possible suite environments.
-	 */
-	public static function suiteEnvironments( $suite ) {
-		$environments = array();
-		$settings = self::suiteSettings( $suite, self::config() );
-		if ( ! isset( $settings['env'] ) || ! is_array( $settings['env'] ) ) {
-			return $environments;
-		}
-
-		foreach ( $settings['env'] as $env => $envConfig ) {
-			$environments[ $env ] = $envConfig
-				? self::mergeConfigs( $settings, $envConfig )
-				: $settings;
-
-			$environments[ $env ]['current_environment'] = $env;
-		}
-
-		return $environments;
+		return new $className( $config );
 	}
 
 }

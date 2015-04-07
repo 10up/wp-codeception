@@ -50,4 +50,20 @@ class SuiteManager extends \Codeception\SuiteManager {
 		}
 	}
 
+	/**
+	 * Initializes modules.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 */
+	protected function initializeModules() {
+		self::$modules = Configuration::modules( $this->settings );
+		self::$actions = Configuration::actions( self::$modules );
+
+		foreach ( self::$modules as $module ) {
+			$module->_initialize();
+		}
+	}
+
 }

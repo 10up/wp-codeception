@@ -21,7 +21,7 @@
 namespace WPCC\Module;
 
 /**
- * Web dirver module.
+ * Web driver module.
  *
  * @since 1.0.0
  * @category WPCC
@@ -30,15 +30,25 @@ namespace WPCC\Module;
 class WebDriver extends \Codeception\Module\WebDriver {
 
 	/**
-	 * Clears browser cookies.
+	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
+	 * @param array $config Configuration array.
 	 */
-	public function clearCookies() {
-		$this->webDriver->manage()->deleteAllCookies();
-		$this->debugSection( 'Cookies', json_encode( $this->webDriver->manage()->getCookies() ) );
+	public function __construct( $config = null ) {
+		// remove "url" field from required fields because it will be automatically populated using home_url() function
+		$url_index = array_search( 'url', $this->requiredFields );
+		if ( ! empty( $url_index ) ) {
+			unset( $this->requiredFields[ $url_index ] );
+		}
+
+		// add home url to the config
+		$this->config['url'] = home_url();
+
+		// call parent constructor
+		parent::__construct( $config );
 	}
 
 }
