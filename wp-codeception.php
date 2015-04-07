@@ -32,8 +32,13 @@ if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
 	return;
 }
 
-// do nothing if WP_CLI or Composer dependecies are not installed
-if ( ! defined( 'WP_CLI' ) || ! WP_CLI || ! file_exists( __DIR__ . '/vendor/codeception/codeception/autoload.php' ) ) {
+// do nothing if WP_CLI is not defined
+if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
+	return;
+}
+
+// do nothing if Composer is no installed
+if ( ! file_exists( __DIR__ . '/vendor/codeception/codeception/autoload.php' ) ) {
 	return;
 }
 
