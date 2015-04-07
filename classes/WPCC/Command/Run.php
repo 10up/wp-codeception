@@ -53,7 +53,7 @@ class Run extends \Codeception\Command\Run {
 		if ( ! $this->options['colors'] ) {
 			$this->options['colors'] = $config['settings']['colors'];
 		}
-		
+
 		if ( ! $this->options['silent'] ) {
 			$this->output->writeln( Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString() );
 		}
@@ -143,7 +143,7 @@ class Run extends \Codeception\Command\Run {
 	 * @param string $path The test name.
 	 * @return string The filtered test name on success, otherwise NULL.
 	 */
-    protected function matchFilteredTestNameEx( &$path ) {
+	protected function matchFilteredTestNameEx( &$path ) {
 		$test_parts = explode( ':', $path );
 		if ( count( $test_parts ) > 1 ) {
 			list( $path, $filter ) = $test_parts;

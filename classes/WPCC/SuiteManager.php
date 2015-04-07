@@ -57,7 +57,7 @@ class SuiteManager extends \Codeception\SuiteManager {
 	 *
 	 * @access protected
 	 */
-    protected function initializeModules() {
+	protected function initializeModules() {
 		self::$modules = Configuration::modules( $this->settings );
 		self::$actions = Configuration::actions( self::$modules );
 

@@ -41,7 +41,7 @@ class Codeception extends \WP_CLI_Command {
 	 * Runs Codeception tests.
 	 *
 	 * ### OPTIONS
-	 * 
+	 *
 	 * <suite>
 	 * : The suite name to run. There are three types of suites available to
 	 * use: unit, functional and acceptance, but currently only acceptance tests
@@ -65,7 +65,7 @@ class Codeception extends \WP_CLI_Command {
 	 * @synopsis [<suite>] [<test>] [--steps] [--debug]
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @access public
 	 * @param array $args Unassociated array of arguments passed to this command.
 	 * @param array $assoc_args Associated array of arguments passed to this command.
@@ -122,7 +122,7 @@ class Codeception extends \WP_CLI_Command {
 	 *
 	 * <path>
 	 * : Sets path to a project, where tests should be placed.
-	 * 
+	 *
 	 * ### EXAMPLE
 	 *
 	 *     wp codeception bootstrap

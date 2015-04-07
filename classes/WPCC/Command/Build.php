@@ -41,7 +41,7 @@ class Build extends \Codeception\Command\Build {
 	 * @access protected
 	 * @param string $configFile Alternative config file name.
 	 */
-    protected function buildActorsForConfig( $configFile ) {
+	protected function buildActorsForConfig( $configFile ) {
 		$config = $this->getGlobalConfig( $configFile );
 		$suites = $this->getSuites( $configFile );
 

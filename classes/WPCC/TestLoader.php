@@ -62,7 +62,7 @@ class TestLoader extends \Codeception\TestLoader {
 	 * @param mixed $file Deprecated parameter.
 	 * @return \WPCC\TestCase\Cest Instance of Cest test.
 	 */
-    protected function createTestFromCestMethod( $cestInstance, $methodName, $file ) {
+	protected function createTestFromCestMethod( $cestInstance, $methodName, $file ) {
 		if ( strpos( $methodName, '_' ) === 0 || $methodName == '__construct' ) {
 			return null;
 		}
@@ -78,7 +78,7 @@ class TestLoader extends \Codeception\TestLoader {
 
 		$cest->getScenario()->env( Annotation::forMethod( $testClass, $methodName )->fetchAll( 'env' ) );
 		$cest->setDependencies( \PHPUnit_Util_Test::getDependencies( $testClass, $methodName ) );
-		
+
 		return $cest;
 	}
 

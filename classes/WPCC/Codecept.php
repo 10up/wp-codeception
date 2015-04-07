@@ -40,7 +40,7 @@ class Codecept extends \Codeception\Codecept {
 	 * @return \PHPUnit_Framework_TestResult The suite execution results.
 	 */
 	public function runSuite( $settings, $suite, $test = null ) {
-        $suiteManager = new SuiteManager( $this->dispatcher, $suite, $settings );
+		$suiteManager = new SuiteManager( $this->dispatcher, $suite, $settings );
 		$suiteManager->initialize();
 		$suiteManager->loadTests( $test );
 		$suiteManager->run( $this->runner, $this->result, $this->options );

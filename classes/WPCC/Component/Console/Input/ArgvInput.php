@@ -44,11 +44,11 @@ class ArgvInput extends \Symfony\Component\Console\Input\ArgvInput {
 	 */
 	public function __construct( array $args = null, InputDefinition $definition = null ) {
 		global $argv;
-        if ( is_null( $args ) ) {
-            $args = array_slice( (array) $argv, 1 );
-        }
-		
+		if ( is_null( $args ) ) {
+			$args = array_slice( (array) $argv, 1 );
+		}
+
 		parent::__construct( $args, $definition );
 	}
-	
+
 }

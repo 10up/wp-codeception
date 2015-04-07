@@ -40,7 +40,7 @@ class Actor extends \Codeception\Lib\Generator\Actor {
 	 * @access public
 	 * @param array $settings Suite settings.
 	 */
-    public function __construct( $settings ) {
+	public function __construct( $settings ) {
 		$this->settings = $settings;
 		$this->modules = Configuration::modules( $settings );
 		$this->actions = Configuration::actions( $this->modules );

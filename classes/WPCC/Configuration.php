@@ -30,20 +30,20 @@ use Codeception\Exception\Configuration as ConfigurationException;
  */
 class Configuration extends \Codeception\Configuration {
 
-    /**
-     * Creates a new instance of a module and configures it. Module class is
+	/**
+	 * Creates a new instance of a module and configures it. Module class is
 	 * searched and resolves according following rules:
-     *
-     * 1. if "class" element is fully qualified class name, it will be taken to create module;
-     * 2. module class will be searched under default namespace, according $namespace parameter: $namespace . '\Codeception\Module\' . $class;
-     * 3. module class will be searched under Codeception and WPCC module namespace, that are "\Codeception\Module" and "\WPCC\Module".
+	 *
+	 * 1. if "class" element is fully qualified class name, it will be taken to create module;
+	 * 2. module class will be searched under default namespace, according $namespace parameter: $namespace . '\Codeception\Module\' . $class;
+	 * 3. module class will be searched under Codeception and WPCC module namespace, that are "\Codeception\Module" and "\WPCC\Module".
 	 *
 	 * @since 1.0.0
 	 * @throws \Codeception\Exception\Configuration
-	 * 
+	 *
 	 * @param string $class The module class name.
-     * @param array $config The module configuration.
-     * @param string $namespace The default namespace for module.
+	 * @param array $config The module configuration.
+	 * @param string $namespace The default namespace for module.
 	 * @return \Codeception\Module The module instance.
 	 */
 	public static function createModule( $class, $config, $namespace = '' ) {
