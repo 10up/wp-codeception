@@ -29,6 +29,43 @@ namespace WPCC;
 class Codecept extends \Codeception\Codecept {
 
 	/**
+	 * Registers event listeners.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+    public function registerSubscribers() {
+		// required
+		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\ErrorHandler() );
+		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\Bootstrap() );
+		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\Module() );
+		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\BeforeAfterTest() );
+		$this->dispatcher->addSubscriber( new \WPCC\Subscriber\AutoRebuild() );
+
+		// optional
+		if ( !$this->options['silent'] ) {
+			$this->dispatcher->addSubscriber( new \Codeception\Subscriber\Console( $this->options ) );
+		}
+		
+		if ( $this->options['fail-fast'] ) {
+			$this->dispatcher->addSubscriber( new \Codeception\Subscriber\FailFast() );
+		}
+
+		if ( $this->options['coverage'] ) {
+			$this->dispatcher->addSubscriber( new \Codeception\Coverage\Subscriber\Local( $this->options ) );
+			$this->dispatcher->addSubscriber( new \Codeception\Coverage\Subscriber\LocalServer( $this->options ) );
+			$this->dispatcher->addSubscriber( new \Codeception\Coverage\Subscriber\RemoteServer( $this->options ) );
+			$this->dispatcher->addSubscriber( new \Codeception\Coverage\Subscriber\Printer( $this->options ) );
+		}
+
+		// extensions
+		foreach ( $this->extensions as $subscriber ) {
+			$this->dispatcher->addSubscriber( $subscriber );
+		}
+	}
+
+	/**
 	 * Runs suite tests.
 	 *
 	 * @since 1.0.0

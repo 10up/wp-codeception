@@ -18,59 +18,54 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC\Module;
+namespace WPCC\Subscriber;
+
+use Codeception\Event\SuiteEvent;
+use WPCC\Component\Generator\Actor;
+use WPCC\SuiteManager;
 
 /**
- * Web driver module.
+ * Rebuilds test guys before tests start.
  *
  * @since 1.0.0
  * @category WPCC
- * @package Module
+ * @package Subscriber
  */
-class WebDriver extends \Codeception\Module\WebDriver {
+class AutoRebuild extends \Codeception\Subscriber\AutoRebuild {
 
 	/**
-	 * Constructor.
+	 * Updates test guy class.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param array $config Configuration array.
+	 * @param SuiteEvent $e Event object.
 	 */
-	public function __construct( $config = null ) {
-		// remove "url" field from required fields because it will be automatically populated using home_url() function
-		$url_index = array_search( 'url', $this->requiredFields );
-		if ( ! empty( $url_index ) ) {
-			unset( $this->requiredFields[ $url_index ] );
+	public function updateGuy( SuiteEvent $e ) {
+		$settings = $e->getSettings();
+		$guyFile = $settings['path'] . $settings['class_name'] . '.php';
+
+		// load guy class to see hash
+		$handle = fopen( $guyFile, "r" );
+		if ( $handle ) {
+			$line = fgets( $handle );
+			if ( preg_match( '~\[STAMP\] ([a-f0-9]*)~', $line, $matches ) ) {
+				$hash = $matches[1];
+				$currentHash = Actor::genHash( SuiteManager::$actions, $settings );
+
+				// regenerate guy class when hashes do not match
+				if ( $hash != $currentHash ) {
+					codecept_debug( "Rebuilding {$settings['class_name']}..." );
+					$guyGenerator = new Actor( $settings );
+					fclose( $handle );
+					$generated = $guyGenerator->produce();
+					file_put_contents( $guyFile, $generated );
+					return;
+				}
+			}
+			
+			fclose( $handle );
 		}
-
-		// add home url to the config
-		$this->config['url'] = home_url();
-
-		// add pahntomjs path
-		$phantomjs_binary = WPCC_ABSPATH . '/node_modules/phantomjs/bin/phantomjs';
-		if ( ! isset( $this->config['capabilities'] ) ) {
-			$this->config['capabilities'] = array(
-				'phantomjs.binary.path' => $phantomjs_binary,
-			);
-		} else {
-			$this->config['capabilities']['phantomjs.binary.path'] = $phantomjs_binary;
-		}
-
-		// call parent constructor
-		parent::__construct( $config );
 	}
 
-	/**
-	 * Clears browser cookies.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 */
-	public function clearCookies() {
-		$this->webDriver->manage()->deleteAllCookies();
-		$this->debugSection( 'Cookies', json_encode( $this->webDriver->manage()->getCookies() ) );
-	}
-	
 }
