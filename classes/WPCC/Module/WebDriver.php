@@ -51,4 +51,16 @@ class WebDriver extends \Codeception\Module\WebDriver {
 		parent::__construct( $config );
 	}
 
+	/**
+	 * Clears browser cookies.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function clearCookies() {
+		$this->webDriver->manage()->deleteAllCookies();
+		$this->debugSection( 'Cookies', json_encode( $this->webDriver->manage()->getCookies() ) );
+	}
+	
 }
