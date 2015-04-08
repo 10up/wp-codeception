@@ -47,18 +47,20 @@ class WebDriver extends \Codeception\Module\WebDriver {
 		// add home url to the config
 		$this->config['url'] = home_url();
 
-		// add pahntomjs path
-		$phantomjs_binary = WPCC_ABSPATH . '/node_modules/phantomjs/bin/phantomjs';
-		if ( ! isset( $this->config['capabilities'] ) ) {
-			$this->config['capabilities'] = array(
-				'phantomjs.binary.path' => $phantomjs_binary,
-			);
-		} else {
-			$this->config['capabilities']['phantomjs.binary.path'] = $phantomjs_binary;
-		}
-
 		// call parent constructor
 		parent::__construct( $config );
+
+		// add pahntomjs path if needed
+		if ( 'phantomjs' == $this->config['browser'] ) {
+			$phantomjs_binary = WPCC_ABSPATH . '/node_modules/phantomjs/bin/phantomjs';
+			if ( ! isset( $this->config['capabilities'] ) ) {
+				$this->config['capabilities'] = array(
+					'phantomjs.binary.path' => $phantomjs_binary,
+				);
+			} elseif ( empty( $this->config['capabilities']['phantomjs.binary.path'] ) ) {
+				$this->config['capabilities']['phantomjs.binary.path'] = $phantomjs_binary;
+			}
+		}
 	}
 
 	/**
