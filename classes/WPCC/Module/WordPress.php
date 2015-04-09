@@ -36,38 +36,40 @@ class WordPress extends \Codeception\Module {
 	 *
 	 * @access public
 	 * @param string $role A user role to set.
-	 * @param array $random_user Data used to create a temp user.
 	 * @return \WP_User|\WP_Error The user object on success, otherwise WP_Error object.
 	 */
-	public function createTempUser( $role = 'administrator', &$random_user = null ) {
-		$response = wp_remote_get( 'http://api.randomuser.me/' );
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
+	public function createTempUser( $role = 'administrator' ) {
+		$faker = \Faker\Factory::create();
 
-		$response_code = wp_remote_retrieve_response_code( $response );
-		if ( 200 != $response_code ) {
-			return new \WP_Error( $response_code, 'Random user generation error.' );
-		}
-
-		$response = json_decode( wp_remote_retrieve_body( $response ), true );
-		$random_user = current( $response['results'] );
-		$random_user = $random_user['user'];
+		$first_name = $faker->firstName;
+		$last_name = $faker->lastName;
+		$display_name = sprintf( '%s %s', $first_name, $last_name );
 
 		$user_data = array(
-			'user_pass'    => $random_user['password'],
-			'user_login'   => $random_user['username'],
-			'user_email'   => $random_user['email'],
-			'display_name' => sprintf( '%s %s', $random_user['name']['first'], $random_user['name']['last'] ),
-			'first_name'   => $random_user['name']['first'],
-			'last_name'    => $random_user['name']['last'],
+			'user_pass'    => 'qwerty',
+			'user_login'   => sanitize_title( $display_name ),
+			'user_email'   => $faker->email,
+			'display_name' => $display_name,
+			'first_name'   => $first_name,
+			'last_name'    => $last_name,
 			'role'         => $role,
 		);
-		
-		$user_id = wp_insert_user( $user_data );
-		$user = is_wp_error( $user_id ) ? $user_id : get_user_by( 'id', $user_id );
 
-		return $user;
+		$user_id = wp_insert_user( $user_data );
+		if ( ! is_wp_error( $user_id ) ) {
+			$message = sprintf(
+				'Created temporary user %s (%s) with %s role',
+				$display_name,
+				$user_id,
+				$role
+			);
+			
+			$this->debug( $message );
+			
+			return get_user_by( 'id', $user_id );
+		}
+
+		return $user_id;
 	}
 
 }
