@@ -60,6 +60,8 @@ class WordPress extends \Codeception\Module {
 				wp_delete_user( $user );
 			}
 
+			$this->debug( 'Deleted temporary user with id = ' . $user );
+
 			unset( $this->_temp_users[ $user_index ] );
 		}
 	}
