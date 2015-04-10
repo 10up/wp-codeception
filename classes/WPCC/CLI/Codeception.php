@@ -56,13 +56,17 @@ class Codeception extends \WP_CLI_Command {
 	 * <debug>
 	 * : Determines whether to show debug and scenario output or not.
 	 *
+	 * <env>
+	 * : Environment to use during tests execution.
+	 *
 	 * ### EXAMPLE
 	 *
 	 *     wp codeception run
 	 *     wp codeception run --steps
 	 *     wp codeception run --debug
+	 *     wp codeception run --env=staging
 	 *
-	 * @synopsis [<suite>] [<test>] [--steps] [--debug]
+	 * @synopsis [<suite>] [<test>] [--steps] [--debug] [--env=<env>]
 	 *
 	 * @since 1.0.0
 	 *
