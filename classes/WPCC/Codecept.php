@@ -35,7 +35,7 @@ class Codecept extends \Codeception\Codecept {
 	 *
 	 * @access public
 	 */
-    public function registerSubscribers() {
+	public function registerSubscribers() {
 		// required
 		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\ErrorHandler() );
 		$this->dispatcher->addSubscriber( new \Codeception\Subscriber\Bootstrap() );

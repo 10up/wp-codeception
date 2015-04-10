@@ -64,7 +64,7 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	 *
 	 * @access public
 	 */
-    public function createGlobalConfig() {
+	public function createGlobalConfig() {
 		$basicConfig = array(
 			'actor' => $this->actorSuffix,
 			'paths' => array(
@@ -95,7 +95,7 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	 *
 	 * @access protected
 	 */
-    protected function createDirs() {
+	protected function createDirs() {
 		@mkdir( 'tests' );
 		@mkdir( $this->logDir );
 		@mkdir( $this->dataDir );

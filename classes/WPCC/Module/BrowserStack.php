@@ -54,7 +54,7 @@ class BrowserStack extends \Codeception\Module\WebDriver {
 	 *
 	 * @access public
 	 */
-    public function _initialize() {
+	public function _initialize() {
 		$this->wd_host = sprintf( 'http://%s:%s@hub.browserstack.com/wd/hub', $this->config['username'], $this->config['access_key'] );
 
 		$this->capabilities = $this->config['capabilities'];
@@ -78,7 +78,7 @@ class BrowserStack extends \Codeception\Module\WebDriver {
 	 *
 	 * @access protected
 	 */
-    protected function initialWindowSize() {
+	protected function initialWindowSize() {
 		if ( isset( $this->config['resolution'] ) ) {
 			if ( $this->config['resolution'] == 'maximize' ) {
 				$this->maximizeWindow();
