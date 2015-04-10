@@ -88,9 +88,10 @@ class WordPress extends \Codeception\Module {
 	 *
 	 * @access public
 	 * @param string $role A user role to set.
+	 * @param string $password A password to set.
 	 * @return \WP_User|\WP_Error The user object on success, otherwise WP_Error object.
 	 */
-	public function createTempUser( $role ) {
+	public function createTempUser( $role = 'administrator', $password = 'qwerty' ) {
 		$faker = \Faker\Factory::create();
 
 		$first_name = $faker->firstName;
@@ -98,7 +99,7 @@ class WordPress extends \Codeception\Module {
 		$display_name = sprintf( '%s %s', $first_name, $last_name );
 
 		$user_data = array(
-			'user_pass'    => 'qwerty',
+			'user_pass'    => $password,
 			'user_login'   => sanitize_title( $display_name ),
 			'user_email'   => $faker->email,
 			'display_name' => $display_name,
