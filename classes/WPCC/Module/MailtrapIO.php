@@ -54,9 +54,9 @@ class MailtrapIO extends \Codeception\Module {
 	 * @access protected
 	 * @var array
 	 */
-    protected $config = array(
-        'port' => '2525',
-    );
+	protected $config = array(
+		'port' => '2525',
+	);
 
 	/**
 	 * Setups module environment.
