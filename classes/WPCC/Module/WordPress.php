@@ -30,6 +30,56 @@ namespace WPCC\Module;
 class WordPress extends \Codeception\Module {
 
 	/**
+	 * The array of temporary created users.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $_temp_users = array();
+
+	/**
+	 * Deletes temp user.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param \WP_User|int $user The user object or ID.
+	 */
+	public function deleteTempUser( $user ) {
+		if ( is_a( $user, '\WP_User' ) ) {
+			$user = $user->ID;
+		}
+		
+		$user_index = array_search( $user, $this->_temp_users );
+		if ( false !== $user_index ) {
+			if ( is_multisite() ) {
+				wpmu_delete_user( $user );
+			} else {
+				wp_delete_user( $user );
+			}
+
+			unset( $this->_temp_users[ $user_index ] );
+		}
+	}
+
+	/**
+	 * Deletes all temp users.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function deleteTempUsers() {
+		foreach ( $this->_temp_users as $user_id ) {
+			$this->deleteTempUser( $user_id );
+		}
+
+		$this->_temp_users = array();
+	}
+
+	/**
 	 * Creates temp user.
 	 *
 	 * @since 1.0.0
@@ -38,7 +88,7 @@ class WordPress extends \Codeception\Module {
 	 * @param string $role A user role to set.
 	 * @return \WP_User|\WP_Error The user object on success, otherwise WP_Error object.
 	 */
-	public function createTempUser( $role = 'administrator' ) {
+	public function createTempUser( $role ) {
 		$faker = \Faker\Factory::create();
 
 		$first_name = $faker->firstName;
@@ -57,6 +107,9 @@ class WordPress extends \Codeception\Module {
 
 		$user_id = wp_insert_user( $user_data );
 		if ( ! is_wp_error( $user_id ) ) {
+			$this->_temp_users[] = $user_id;
+			add_user_to_blog( get_current_blog_id(), $user_id, $role );
+
 			$message = sprintf(
 				'Created temporary user %s (%s) with %s role',
 				$display_name,
