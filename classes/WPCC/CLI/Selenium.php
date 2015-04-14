@@ -86,6 +86,7 @@ class Selenium extends \WP_CLI_Command {
 	 *     wp selenium start
 	 *
 	 * @since 1.0.0
+	 * @alias run
 	 *
 	 * @access public
 	 * @param array $args Unassociated array of arguments passed to this command.
