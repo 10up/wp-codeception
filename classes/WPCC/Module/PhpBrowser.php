@@ -51,4 +51,16 @@ class PhpBrowser extends \Codeception\Module\PhpBrowser {
 		parent::__construct( $config );
 	}
 
+	/**
+	 * Clears browser cookies.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function clearCookies() {
+        $this->client->getCookieJar()->clear();
+		$this->debugSection( 'Cookies', $this->client->getCookieJar()->all() );
+	}
+
 }
