@@ -20,8 +20,10 @@
 
 namespace WPCC;
 
-use WPCC\TestCase\Cept;
-use WPCC\TestCase\Cest;
+use Codeception\TestCase;
+use Codeception\TestCase\Cept;
+use Codeception\TestCase\Cest;
+use Codeception\TestCase\Interfaces\Configurable;
 use Codeception\Util\Annotation;
 
 /**
@@ -31,6 +33,30 @@ use Codeception\Util\Annotation;
  * @category WPCC
  */
 class TestLoader extends \Codeception\TestLoader {
+
+	/**
+	 * Setups common environment for a test case.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param \Codeception\TestCase $testCase The test case object.
+	 * @param string $name Test case name.
+	 * @param type $file
+	 */
+	protected function _setupTestCase( TestCase $testCase, $name, $file ) {
+		$testCase->setBackupGlobals( false );
+		$testCase->setBackupStaticAttributes( false );
+		$testCase->setRunTestInSeparateProcess( false );
+		$testCase->setInIsolation( false );
+		$testCase->setPreserveGlobalState( false );
+
+		if ( $testCase instanceof Configurable ) {
+			$testCase->configName( $name );
+			$testCase->configFile( $file );
+			$testCase->initConfig();
+		}
+	}
 
 	/**
 	 * Adds Cept test to the tests list.
@@ -44,9 +70,7 @@ class TestLoader extends \Codeception\TestLoader {
 		$name = $this->relativeName( $file );
 
 		$cept = new Cept();
-		$cept->configName( $name );
-		$cept->configFile( $file );
-		$cept->initConfig();
+		$this->_setupTestCase( $cept, $name, $file );
 
 		$this->tests[] = $cept;
 	}
@@ -67,15 +91,13 @@ class TestLoader extends \Codeception\TestLoader {
 			return null;
 		}
 
-		$testClass = get_class( $cestInstance );
-
 		$cest = new Cest();
-		$cest->configName( $methodName );
-		$cest->configFile( $file );
 		$cest->config( 'testClassInstance', $cestInstance );
 		$cest->config( 'testMethod', $methodName );
-		$cest->initConfig();
+		
+		$this->_setupTestCase( $cest, $methodName, $file );
 
+		$testClass = get_class( $cestInstance );
 		$cest->getScenario()->env( Annotation::forMethod( $testClass, $methodName )->fetchAll( 'env' ) );
 		$cest->setDependencies( \PHPUnit_Util_Test::getDependencies( $testClass, $methodName ) );
 
