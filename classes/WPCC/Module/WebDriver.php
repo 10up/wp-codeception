@@ -20,6 +20,9 @@
 
 namespace WPCC\Module;
 
+use Codeception\Module\WebDriver;
+use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
+
 /**
  * Web driver module.
  *
@@ -27,7 +30,7 @@ namespace WPCC\Module;
  * @category WPCC
  * @package Module
  */
-class WebDriver extends \Codeception\Module\WebDriver {
+class WebDriver extends WebDriver implements WordPressWeb {
 
 	/**
 	 * Constructor.
@@ -74,5 +77,36 @@ class WebDriver extends \Codeception\Module\WebDriver {
 		$this->webDriver->manage()->deleteAllCookies();
 		$this->debugSection( 'Cookies', json_encode( $this->webDriver->manage()->getCookies() ) );
 	}
-	
+
+	/**
+	 * Goes to a specific admin page. Uses amOnPage method to do a redirect.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $path Optional path relative to the admin url.
+	 */
+	public function amOnAdminPage( $path = '' ) {
+		$this->amOnPage( admin_url( $path ) );
+	}
+
+	/**
+	 * Clicks admin menu item. Since we are using a WebDriver the first click on
+	 * a parent element will lead to opening a submenu group. So if we need to
+	 * click on submenu item, we need to do it in two steps.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $menu The menu item to click on.
+	 * @param string $parent The parent menu item to click on first.
+	 */
+	public function clickAdminMenu( $menu, $parent = null ) {
+		if ( $parent ) {
+			$this->click( $parent, '#adminmenu' );
+		}
+		
+		$this->click( $menu, '#adminmenu' );
+	}
+
 }

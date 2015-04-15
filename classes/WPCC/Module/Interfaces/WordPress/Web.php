@@ -18,54 +18,19 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC\Module;
-
-use Codeception\Module\PhpBrowser;
-use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
+namespace WPCC\Module\Interfaces\WordPress;
 
 /**
- * Guzzle based browser module.
- *
+ * Web interface declares common steps for WordPress workflow, which should be
+ * implemented by a browser or a webdriver class.
+ * 
  * @since 1.0.0
  * @category WPCC
  * @package Module
+ * @subpackage Interfaces
  */
-class PhpBrowser extends PhpBrowser implements WordPressWeb {
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @param array $config Configuration array.
-	 */
-	public function __construct( $config = null ) {
-		// remove "url" field from required fields because it will be automatically populated using home_url() function
-		$url_index = array_search( 'url', $this->requiredFields );
-		if ( ! empty( $url_index ) ) {
-			unset( $this->requiredFields[ $url_index ] );
-		}
-
-		// add home url to the config
-		$this->config['url'] = home_url();
-
-		// call parent constructor
-		parent::__construct( $config );
-	}
-
-	/**
-	 * Clears browser cookies.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 */
-	public function clearCookies() {
-        $this->client->getCookieJar()->clear();
-		$this->debugSection( 'Cookies', $this->client->getCookieJar()->all() );
-	}
-
+interface Web {
+	
 	/**
 	 * Goes to a specific admin page. Uses amOnPage method to do a redirect.
 	 *
@@ -74,9 +39,7 @@ class PhpBrowser extends PhpBrowser implements WordPressWeb {
 	 * @access public
 	 * @param string $path Optional path relative to the admin url.
 	 */
-	public function amOnAdminPage( $path = '' ) {
-		$this->amOnPage( admin_url( $path ) );
-	}
+	public function amOnAdminPage( $path = '' );
 	
 	/**
 	 * Clicks admin menu item.
@@ -87,8 +50,6 @@ class PhpBrowser extends PhpBrowser implements WordPressWeb {
 	 * @param string $menu The menu item to click on.
 	 * @param string $parent The parent menu item to click on first.
 	 */
-	public function clickAdminMenu( $menu, $parent = null ) {
-		$this->click( $menu, '#adminmenu' );
-	}
-
+	public function clickAdminMenu( $menu, $parent = null );
+	
 }
