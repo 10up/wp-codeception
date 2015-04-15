@@ -20,7 +20,7 @@
 
 namespace WPCC\Module;
 
-use Codeception\Module\WebDriver;
+use Codeception\Module\WebDriver as CodeceptionWebDriver;
 use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
 
 /**
@@ -30,7 +30,7 @@ use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
  * @category WPCC
  * @package Module
  */
-class WebDriver extends WebDriver implements WordPressWeb {
+class WebDriver extends CodeceptionWebDriver implements WordPressWeb {
 
 	/**
 	 * Constructor.

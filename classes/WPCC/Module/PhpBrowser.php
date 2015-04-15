@@ -20,7 +20,7 @@
 
 namespace WPCC\Module;
 
-use Codeception\Module\PhpBrowser;
+use Codeception\Module\PhpBrowser as CodeceptionPhpBrowser;
 use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
 
 /**
@@ -30,7 +30,7 @@ use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
  * @category WPCC
  * @package Module
  */
-class PhpBrowser extends PhpBrowser implements WordPressWeb {
+class PhpBrowser extends CodeceptionPhpBrowser implements WordPressWeb {
 
 	/**
 	 * Constructor.
