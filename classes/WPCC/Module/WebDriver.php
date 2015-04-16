@@ -109,4 +109,24 @@ class WebDriver extends CodeceptionWebDriver implements WordPressWeb {
 		$this->click( $menu, '#adminmenu' );
 	}
 
+	/**
+	 * Fills TinyMCE editor.
+	 *
+	 * <pre><code>
+	 * <?php
+	 * $I->fillTinyMCEField( 'content', 'Lorem ipsum dolor sit...' );
+	 * ?>
+	 * </code></pre>
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $editor_id The TinyMCE's editor id.
+	 * @param string $value The value to insert into the editor.
+	 */
+	public function fillTinyMCEField( $editor_id, $value ) {
+		$script = sprintf( "tinyMCE.get('%s').setContent('%s')", esc_js( $editor_id ), esc_js( $value ) );
+		$this->webDriver->executeScript( $script );
+	}
+
 }
