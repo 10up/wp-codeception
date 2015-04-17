@@ -51,6 +51,7 @@ class LoginPage extends \WPCC\Helper\PageObject {
 		$I->fillField( self::USERNAME_FIELD, $username );
 		$I->fillField( self::PASSWORD_FIELD, $password );
 		$I->click( self::LOGIN_BUTTON );
+		$I->seeCookie( LOGGED_IN_COOKIE );
 		
 		return $this;
 	}
