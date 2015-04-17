@@ -44,17 +44,39 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 		$suiteConfig = array(
 			'class_name' => $actor . $this->actorSuffix,
 			'modules'    => array(
-				'enabled' => array( 'PhpBrowser', 'WordPress', $actor . 'Helper' ),
+				'enabled' => array( 'PhpBrowser', $actor . 'Helper' ),
 			),
 		);
 
-		$str = "# Codeception Test Suite Configuration\n\n";
+		$str  = "# Codeception Test Suite Configuration\n\n";
 		$str .= "# suite for acceptance tests.\n";
 		$str .= "# perform tests in browser using the WebDriver or PhpBrowser.\n";
 		$str .= "# If you need both WebDriver and PHPBrowser tests - create a separate suite.\n\n";
 
 		$str .= Yaml::dump( $suiteConfig, 5 );
 		$this->createSuite( 'acceptance', $actor, $str );
+	}
+
+	/**
+	 * Creates functional suite.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param string $actor The actor name.
+	 */
+	protected function createFunctionalSuite( $actor = 'Functional' ) {
+		$suiteConfig = array(
+			'class_name' => $actor . $this->actorSuffix,
+			'modules'    => array( 'enabled' => array( 'WordPress', $actor . 'Helper' ) ),
+		);
+
+		$str  = "# Codeception Test Suite Configuration\n\n";
+		$str .= "# suite for functional (integration) tests.\n";
+		$str .= "# emulate web requests and make application process them.\n\n";
+		$str .= Yaml::dump( $suiteConfig, 2 );
+		
+		$this->createSuite( 'functional', $actor, $str );
 	}
 
 	/**
