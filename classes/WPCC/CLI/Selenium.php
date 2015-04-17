@@ -109,4 +109,24 @@ class Selenium extends \WP_CLI_Command {
 		}
 	}
 
+	/**
+	 * Restarts selenium server.
+	 *
+	 * ### OPTIONS
+	 *
+	 * ### EXAMPLE
+	 *
+	 *     wp selenium restart
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param array $args Unassociated array of arguments passed to this command.
+	 * @param array $assoc_args Associated array of arguments passed to this command.
+	 */
+	public function restart( $args, $assoc_args ) {
+		$this->stop( $args, $assoc_args );
+		$this->start( $args, $assoc_args );
+	}
+
 }
