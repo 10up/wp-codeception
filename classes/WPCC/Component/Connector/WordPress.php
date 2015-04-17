@@ -37,6 +37,47 @@ class WordPress extends Client {
 	use \Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
 
 	/**
+	 * Returns absolute URI.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param string $uri Current URI string.
+	 * @return string Absolute URI string.
+	 */
+	protected function getAbsoluteUri( $uri ) {
+        // already absolute?
+		if ( 0 === strpos( $uri, 'http' ) ) {
+			return $uri;
+		}
+
+		$currentUri = ! $this->history->isEmpty()
+			? $this->history->current()->getUri()
+			: home_url( '/' );
+
+		// protocol relative URL
+		if ( 0 === strpos( $uri, '//' ) ) {
+			return parse_url( $currentUri, PHP_URL_SCHEME ) . ':' . $uri;
+		}
+
+		// anchor?
+		if ( ! $uri || '#' == $uri[0] ) {
+			return preg_replace( '/#.*?$/', '', $currentUri ) . $uri;
+		}
+
+		if ( '/' !== $uri[0] ) {
+			$path = parse_url( $currentUri, PHP_URL_PATH );
+			if ( '/' !== substr( $path, -1 ) ) {
+				$path = substr( $path, 0, strrpos( $path, '/' ) + 1 );
+			}
+
+			$uri = $path . $uri;
+		}
+
+		return preg_replace( '#^(.*?//[^/]+)\/.*$#', '$1', $currentUri ) . $uri;
+	}
+
+	/**
 	 * Makes a request.
 	 *
 	 * @since 1.0.0
@@ -45,27 +86,42 @@ class WordPress extends Client {
 	 * @param \Symfony\Component\BrowserKit\Request $request An origin request instance.
 	 * @return \Symfony\Component\BrowserKit\Response An origin response instance.
 	 */
-	protected function doRequest( Request $request ) {
-		$_COOKIE = $request->getCookies();
-		$_SERVER = $request->getServer();
-		$_FILES = $this->remapFiles( $request->getFiles() );
+	protected function doRequest( $request ) {
+		$uri = $request->getUri();
+		parse_str( parse_url( $uri, PHP_URL_QUERY ), $_get );
 
-		$_REQUEST = $this->remapRequestParameters( $request->getParameters() );
-		if ( strtoupper( $request->getMethod() ) == 'GET' ) {
-			$_GET = $_REQUEST;
-		} else {
-			$_POST = $_REQUEST;
+		$_server = $request->getServer();
+		$_server['REQUEST_METHOD'] = strtoupper( $request->getMethod() );
+		$_server['REQUEST_URI'] = str_replace( home_url(), '', $uri );
+
+		$method = strtoupper( $request->getMethod() );
+		$_request = $request->getParameters();
+		$_request = array_merge( $_request, $_get );
+		
+		$args = array(
+			'_COOKIE'  => $request->getCookies(),
+			'_SERVER'  => $_server,
+			'_FILES'   => $this->remapFiles( $request->getFiles() ),
+			'_REQUEST' => $_request,
+			'_GET'     => $_get,
+			'_POST'    => 'POST' == $method ? $_request : array(),
+		);
+		
+		$content = '';
+
+		$stderr = tmpfile();
+		$command = sprintf( '%s%smock-request.php "%s"', WPCC_ABSPATH, DIRECTORY_SEPARATOR, http_build_query( $args ) );
+		$descriptorspec = array( array( 'pipe', 'r' ), array( 'pipe', 'w' ), $stderr );
+		
+		$process = proc_open( $command, $descriptorspec, $pipes, ABSPATH );
+		if ( $process ) {
+			fclose( $pipes[0] );
+			$content = stream_get_contents( $pipes[1] );
+			fclose( $pipes[1] );
+			proc_close( $process );
 		}
 
-		$uri = str_replace( 'http://localhost', '', $request->getUri() );
-
-		$_SERVER['REQUEST_METHOD'] = strtoupper( $request->getMethod() );
-		$_SERVER['REQUEST_URI'] = $uri;
-
-		ob_start();
-//		include $this->index;
-		$content = ob_get_contents();
-		ob_end_clean();
+		fclose( $stderr );
 
 		$headers = array();
 		$php_headers = headers_list();
