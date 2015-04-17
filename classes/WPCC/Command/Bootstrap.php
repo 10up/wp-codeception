@@ -68,7 +68,9 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	protected function createFunctionalSuite( $actor = 'Functional' ) {
 		$suiteConfig = array(
 			'class_name' => $actor . $this->actorSuffix,
-			'modules'    => array( 'enabled' => array( 'WordPress', $actor . 'Helper' ) ),
+			'modules'    => array( 
+				'enabled' => array( 'WordPress', $actor . 'Helper' )
+			),
 		);
 
 		$str  = "# Codeception Test Suite Configuration\n\n";

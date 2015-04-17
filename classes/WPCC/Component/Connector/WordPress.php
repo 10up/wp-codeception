@@ -36,17 +36,17 @@ class WordPress extends Client {
 
 	use \Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
 
-    /**
-     * Makes a request.
-     *
+	/**
+	 * Makes a request.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @access protected
-     * @param \Symfony\Component\BrowserKit\Request $request An origin request instance.
-     * @return \Symfony\Component\BrowserKit\Response An origin response instance.
-     */
+	 * @param \Symfony\Component\BrowserKit\Request $request An origin request instance.
+	 * @return \Symfony\Component\BrowserKit\Response An origin response instance.
+	 */
 	protected function doRequest( Request $request ) {
-        $_COOKIE = $request->getCookies();
+		$_COOKIE = $request->getCookies();
 		$_SERVER = $request->getServer();
 		$_FILES = $this->remapFiles( $request->getFiles() );
 
@@ -79,7 +79,7 @@ class WordPress extends Client {
 			}
 		}
 
-		$headers['Content-type'] = isset( $headers['Content-type'] ) 
+		$headers['Content-type'] = isset( $headers['Content-type'] )
 			? $headers['Content-type']
 			: "text/html; charset=UTF-8";
 
