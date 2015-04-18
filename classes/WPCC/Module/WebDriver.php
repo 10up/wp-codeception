@@ -20,9 +20,6 @@
 
 namespace WPCC\Module;
 
-use Codeception\Module\WebDriver as CodeceptionWebDriver;
-use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
-
 /**
  * Web driver module.
  *
@@ -30,7 +27,7 @@ use WPCC\Module\Interfaces\WordPress\Web as WordPressWeb;
  * @category WPCC
  * @package Module
  */
-class WebDriver extends CodeceptionWebDriver implements WordPressWeb {
+class WebDriver extends \Codeception\Module\WebDriver {
 
 	/**
 	 * Constructor.
@@ -64,18 +61,6 @@ class WebDriver extends CodeceptionWebDriver implements WordPressWeb {
 				$this->config['capabilities']['phantomjs.binary.path'] = $phantomjs_binary;
 			}
 		}
-	}
-
-	/**
-	 * Clears browser cookies.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 */
-	public function clearCookies() {
-		$this->webDriver->manage()->deleteAllCookies();
-		$this->debugSection( 'Cookies', json_encode( $this->webDriver->manage()->getCookies() ) );
 	}
 
 	/**
