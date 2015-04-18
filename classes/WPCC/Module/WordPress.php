@@ -20,9 +20,6 @@
 
 namespace WPCC\Module;
 
-use Codeception\TestCase;
-use WPCC\Component\Connector\WordPress as WordPressConnector;
-
 /**
  * WordPress module.
  *
@@ -30,18 +27,40 @@ use WPCC\Component\Connector\WordPress as WordPressConnector;
  * @category WPCC
  * @package Module
  */
-class WordPress extends \Codeception\Lib\Framework {
+class WordPress extends \Codeception\Module\PhpBrowser {
 
 	/**
-	 * Initializes module before test run.
+	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param \Codeception\TestCase $test The current test case object.
+	 * @param array $config Configuration array.
 	 */
-	public function _before( TestCase $test ) {
-		$this->client = new WordPressConnector();
+	public function __construct( $config = null ) {
+		// remove "url" field from required fields because it will be automatically populated using home_url() function
+		$url_index = array_search( 'url', $this->requiredFields );
+		if ( ! empty( $url_index ) ) {
+			unset( $this->requiredFields[ $url_index ] );
+		}
+
+		// add home url to the config
+		$this->config['url'] = home_url();
+
+		// call parent constructor
+		parent::__construct( $config );
 	}
-	
+
+	/**
+	 * Goes to a specific admin page. Uses amOnPage method to do a redirect.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $path Optional path relative to the admin url.
+	 */
+	public function amOnAdminPage( $path = '' ) {
+		$this->amOnPage( admin_url( $path ) );
+	}
+
 }
