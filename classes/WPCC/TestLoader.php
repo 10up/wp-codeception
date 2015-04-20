@@ -42,7 +42,7 @@ class TestLoader extends \Codeception\TestLoader {
 	 * @access protected
 	 * @param \Codeception\TestCase $testCase The test case object.
 	 * @param string $name Test case name.
-	 * @param type $file
+	 * @param string $file The file name.
 	 */
 	protected function _setupTestCase( TestCase $testCase, $name, $file ) {
 		$testCase->setBackupGlobals( false );
@@ -102,6 +102,39 @@ class TestLoader extends \Codeception\TestLoader {
 		$cest->setDependencies( \PHPUnit_Util_Test::getDependencies( $testClass, $methodName ) );
 
 		return $cest;
+	}
+
+	/**
+	 * Creates test from PHPUnit method.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param \ReflectionClass $class The class object.
+	 * @param \ReflectionMethod $method The method object.
+	 * @return \PHPUnit_Framework_Test The test object.
+	 */
+    protected function createTestFromPhpUnitMethod( \ReflectionClass $class, \ReflectionMethod $method ) {
+		if ( ! \PHPUnit_Framework_TestSuite::isTestMethod( $method ) ) {
+			return;
+		}
+		
+		$test = \PHPUnit_Framework_TestSuite::createTest( $class, $method->name );
+		if ( $test instanceof \PHPUnit_Framework_TestSuite_DataProvider ) {
+			foreach ( $test->tests() as $t ) {
+				$this->enhancePhpunitTest( $t );
+			}
+		} else {
+			$this->enhancePhpunitTest( $test );
+		}
+
+		$test->setBackupGlobals( false );
+		$test->setBackupStaticAttributes( false );
+		$test->setRunTestInSeparateProcess( false );
+		$test->setInIsolation( false );
+		$test->setPreserveGlobalState( false );
+		
+		return $test;
 	}
 
 }
