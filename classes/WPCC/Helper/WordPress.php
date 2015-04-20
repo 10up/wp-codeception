@@ -30,6 +30,17 @@ namespace WPCC\Helper;
 class WordPress {
 
 	/**
+	 * The array of switched users.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @static
+	 * @access protected
+	 * @var array
+	 */
+	protected static $_switched_users = array();
+
+	/**
 	 * The array of temporary created users.
 	 *
 	 * @since 1.0.0
@@ -119,6 +130,33 @@ class WordPress {
 		}
 
 		return $user_id;
+	}
+
+	/**
+	 * Switches current user to a new user.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @static
+	 * @access public
+	 * @param int $user_id The new user id.
+	 */
+	public static function switchToUser( $user_id ) {
+		self::$_switched_users[] = get_current_user_id();
+		wp_set_current_user( $user_id );
+	}
+
+	/**
+	 * Restores previously switched user.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @static
+	 * @access public
+	 */
+	public static function restoreCurrentUser() {
+		$user_id = array_pop( self::$_switched_users );
+		wp_set_current_user( $user_id );
 	}
 	
 }
