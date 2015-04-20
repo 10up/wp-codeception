@@ -59,6 +59,16 @@ class MailtrapIO extends \Codeception\Module {
 	);
 
 	/**
+	 * The current email data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $_current_email = array();
+
+	/**
 	 * Setups module environment.
 	 *
 	 * @since 1.0.0
@@ -210,29 +220,111 @@ class MailtrapIO extends \Codeception\Module {
 	}
 
 	/**
-	 * Deletes an email from the inbox.
+	 * Deletes an email from the inbox. If no email id is provided, then email id
+	 * will be taken from the current email.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
 	 * @param int $email_id The email id to delete.
 	 */
-	public function deleteEmail( $email_id ) {
+	public function deleteEmail( $email_id = null ) {
+		if ( ! $email_id ) {
+			$this->assertNotEmpty( $this->_current_email, 'The current email is not selected' );
+			$email_id = $this->_current_email['id'];
+		}
+
 		$this->_send_delete_request( '/messages/' . $email_id );
 	}
 
 	/**
-	 * Marks email read.
+	 * Marks email read. If no email id is provided, then email id will be taken
+	 * from the current email.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
 	 * @param int $email_id The email id.
 	 */
-	public function markEmailRead( $email_id ) {
+	public function markEmailRead( $email_id = null ) {
+		if ( ! $email_id ) {
+			$this->assertNotEmpty( $this->_current_email, 'The current email is not selected' );
+			$email_id = $this->_current_email['id'];
+		}
+
 		$this->_send_patch_request( '/messages/' . $email_id, array(
 			'message' => array( 'is_read' => true )
 		) );
+	}
+
+	/**
+	 * Selects latest email for a recipient.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $recipient The recipient email.
+	 */
+	public function amOnLatestEmailFor( $recipient ) {
+		$this->_current_email = $this->grabLatestEmailFor( $recipient );
+	}
+
+	/**
+	 * Checks whether email is not read yet or not.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @access public
+	 */
+	public function seeEmailIsNotRead() {
+		$this->assertFalse( $this->_current_email['is_read'], 'The email is already read.' );
+	}
+
+	/**
+	 * Checks whether email is read or not.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function seeEmailIsRead() {
+		$this->assertTrue( $this->_current_email['is_read'], 'The email is not read yet.' );
+	}
+
+	/**
+	 * Checks email subject to be equal to expected subject.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $subject The expected subject.
+	 */
+	public function seeEmailSubjectIs( $subject ) {
+		$this->assertEquals( $subject, $this->_current_email['subject'], 'The email subject is wrong.' );
+	}
+
+	/**
+	 * Checks whether sender email is equal to expected email.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $from_email The sender email address.
+	 */
+	public function seeEmailIsFrom( $from_email ) {
+		$this->assertEquals( $from_email, $this->_current_email['from_email'], 'Sender email is not equal to expected email.' );
+	}
+
+	/**
+	 * Checks whether recipient email is equal to expected email.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $to_email The recipient email address.
+	 */
+	public function seeEmailIsFor( $to_email ) {
+		$this->assertEquals( $to_email, $this->_current_email['to_email'], 'Recipient email is not equal to expected email.' );
 	}
 
 }
