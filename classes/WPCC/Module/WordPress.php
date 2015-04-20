@@ -27,40 +27,25 @@ namespace WPCC\Module;
  * @category WPCC
  * @package Module
  */
-class WordPress extends \Codeception\Module\PhpBrowser {
+class WordPress extends \Codeception\Module {
 
 	/**
-	 * Constructor.
+	 * Checks user meta exists for an user.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param array $config Configuration array.
+	 * @param int $user_id The user id.
+	 * @param string $meta_key The meta key to check.
+	 * @param string $meta_value The meta value to check
 	 */
-	public function __construct( $config = null ) {
-		// remove "url" field from required fields because it will be automatically populated using home_url() function
-		$url_index = array_search( 'url', $this->requiredFields );
-		if ( ! empty( $url_index ) ) {
-			unset( $this->requiredFields[ $url_index ] );
+	public function seeUserMetaFor( $user_id, $meta_key, $meta_value = null ) {
+		$metas = get_user_meta( $user_id, $meta_key );
+		$this->assertNotEmpty( $metas, 'User meta does not exist' );
+
+		if ( func_num_args() > 2 ) {
+			$this->assertContains( $meta_value, $metas, 'User does not have expected meta' );
 		}
-
-		// add home url to the config
-		$this->config['url'] = home_url();
-
-		// call parent constructor
-		parent::__construct( $config );
-	}
-
-	/**
-	 * Goes to a specific admin page. Uses amOnPage method to do a redirect.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @param string $path Optional path relative to the admin url.
-	 */
-	public function amOnAdminPage( $path = '' ) {
-		$this->amOnPage( admin_url( $path ) );
 	}
 
 }
