@@ -70,6 +70,8 @@ class Codeception extends \WP_CLI_Command {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @todo Implement all arguments for run command (http://codeception.com/docs/reference/Commands).
+	 *
 	 * @access public
 	 * @param array $args Unassociated array of arguments passed to this command.
 	 * @param array $assoc_args Associated array of arguments passed to this command.

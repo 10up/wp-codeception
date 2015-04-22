@@ -21,7 +21,8 @@
 namespace WPCC\Module;
 
 /**
- * WordPress module.
+ * WordPress module. This module is not completed yet, feel free to add a WordPress
+ * related assertion if you need any.
  *
  * @since 1.0.0
  * @category WPCC
