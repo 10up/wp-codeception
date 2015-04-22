@@ -62,8 +62,6 @@ class BrowserStack extends \Codeception\Module\WebDriver {
 		if ( ! empty( $this->config['version'] ) ) {
 			$this->capabilities[ \WebDriverCapabilityType::VERSION ] = $this->config['version'];
 		}
-		
-		$this->loadFirefoxProfile();
 
 		$this->webDriver = \RemoteWebDriver::create( $this->wd_host, $this->capabilities );
 		$this->webDriver->manage()->timeouts()->implicitlyWait( $this->config['wait'] );
