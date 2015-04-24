@@ -44,7 +44,7 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 		$suiteConfig = array(
 			'class_name' => $actor . $this->actorSuffix,
 			'modules'    => array(
-				'enabled' => array( 'PhpBrowser', $actor . 'Helper' ),
+				'enabled' => array( 'WordPress', $actor . 'Helper' ),
 			),
 		);
 
