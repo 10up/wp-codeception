@@ -55,8 +55,7 @@ class Configuration extends \Codeception\Configuration {
 
 		// try find module under users suite namespace setting
 		$className = $namespace . '\\Codeception\\Module\\' . $class;
-
-		if ( ! @class_exists( $className ) ) {
+		if ( empty( $namespace ) || ! @class_exists( $className ) ) {
 			// fallback to default namespace
 			$className = '\\WPCC\\Module\\' . $class;
 			if ( ! @class_exists( $className ) ) {
