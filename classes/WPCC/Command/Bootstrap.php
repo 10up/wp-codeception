@@ -44,7 +44,7 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 		$suiteConfig = array(
 			'class_name' => $actor . $this->actorSuffix,
 			'modules'    => array(
-				'enabled' => array( 'WordPress', $actor . 'Helper' ),
+				'enabled' => array( 'WordPress', "\\{$this->namespace}Helper\\{$actor}" ),
 			),
 		);
 
@@ -69,7 +69,7 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 		$suiteConfig = array(
 			'class_name' => $actor . $this->actorSuffix,
 			'modules'    => array( 
-				'enabled' => array( 'WordPress', $actor . 'Helper' )
+				'enabled' => array( 'WordPress', "\\{$this->namespace}Helper\\{$actor}" )
 			),
 		);
 
@@ -95,12 +95,20 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 				'tests'   => 'tests',
 				'log'     => $this->logDir,
 				'data'    => $this->dataDir,
-				'helpers' => $this->helperDir
+				'support' => $this->supportDir,
+				'envs'    => $this->envsDir,
 			),
 			'settings' => array(
 				'bootstrap'    => '_bootstrap.php',
 				'colors'       => strtoupper( substr( PHP_OS, 0, 3 ) ) != 'WIN',
 				'memory_limit' => WP_MAX_MEMORY_LIMIT
+			),
+			'extensions' => array(
+				'enabled' => array( 'Codeception\Extension\RunFailed' ),
+			),
+			'modules'  => array(
+				'config' => array(
+				),
 			),
 		);
 
@@ -123,7 +131,8 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 		@mkdir( 'tests' );
 		@mkdir( $this->logDir );
 		@mkdir( $this->dataDir );
-		@mkdir( $this->helperDir );
+		@mkdir( $this->supportDir );
+		@mkdir( $this->envsDir );
 	}
 
 }

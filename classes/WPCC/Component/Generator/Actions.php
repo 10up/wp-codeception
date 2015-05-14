@@ -18,20 +18,21 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC;
+namespace WPCC\Component\Generator;
 
 use Codeception\Configuration;
 use Codeception\Lib\Di;
-use Codeception\Lib\GroupManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use WPCC\ModuleContainer;
 
 /**
- * Suite manager class.
+ * Generates action classes based on provided configuration.
  *
  * @since 1.0.0
  * @category WPCC
+ * @package Component
+ * @subpackage Generator
  */
-class SuiteManager extends \Codeception\SuiteManager {
+class Actions extends \Codeception\Lib\Generator\Actions {
 
 	/**
 	 * Constructor.
@@ -39,28 +40,20 @@ class SuiteManager extends \Codeception\SuiteManager {
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
-	 * @param string $name The suite name.
-	 * @param array $settings The suite settings.
+	 * @param array $settings Suite settings.
 	 */
-	public function __construct( EventDispatcher $dispatcher, $name, array $settings ) {
+	public function __construct( $settings ) {
+		$this->name = $settings['class_name'];
 		$this->settings = $settings;
-		$this->dispatcher = $dispatcher;
 		$this->di = new Di();
-		$this->path = $settings['path'];
-		$this->groupManager = new GroupManager( $settings['groups'] );
 		$this->moduleContainer = new ModuleContainer( $this->di, $settings );
-
+		
 		$modules = Configuration::modules( $this->settings );
 		foreach ( $modules as $moduleName ) {
-			$this->moduleContainer->create( $moduleName );
+			$this->modules[$moduleName] = $this->moduleContainer->create( $moduleName );
 		}
 		
-		$this->moduleContainer->validateConflicts();
-		$this->suite = $this->createSuite( $name );
-		if ( isset( $settings['current_environment'] ) ) {
-			$this->env = $settings['current_environment'];
-		}
+		$this->actions = $this->moduleContainer->getActions();
 	}
 
 }

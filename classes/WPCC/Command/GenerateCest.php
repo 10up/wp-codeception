@@ -18,49 +18,53 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC;
+namespace WPCC\Command;
 
-use Codeception\Configuration;
-use Codeception\Lib\Di;
-use Codeception\Lib\GroupManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use WPCC\Component\Generator\Cest as CestGenerator;
 
 /**
- * Suite manager class.
+ * Generates Cest (scenario-driven object-oriented test) file.
  *
  * @since 1.0.0
  * @category WPCC
+ * @package Command
  */
-class SuiteManager extends \Codeception\SuiteManager {
+class GenerateCest extends \Codeception\Command\GenerateCest {
 
 	/**
-	 * Constructor.
+	 * Generates Cest class.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
-	 * @param string $name The suite name.
-	 * @param array $settings The suite settings.
+	 * @param \Symfony\Component\Console\Input\InputInterface $input The input parameters.
+	 * @param \Symfony\Component\Console\Output\OutputInterface $output The output interface.
 	 */
-	public function __construct( EventDispatcher $dispatcher, $name, array $settings ) {
-		$this->settings = $settings;
-		$this->dispatcher = $dispatcher;
-		$this->di = new Di();
-		$this->path = $settings['path'];
-		$this->groupManager = new GroupManager( $settings['groups'] );
-		$this->moduleContainer = new ModuleContainer( $this->di, $settings );
+	public function execute( InputInterface $input, OutputInterface $output ) {
+		$suite = $input->getArgument( 'suite' );
+		$class = $input->getArgument( 'class' );
 
-		$modules = Configuration::modules( $this->settings );
-		foreach ( $modules as $moduleName ) {
-			$this->moduleContainer->create( $moduleName );
+		$config = $this->getSuiteConfig( $suite, $input->getOption( 'config' ) );
+		$className = $this->getClassName( $class );
+		$path = $this->buildPath( $config['path'], $class );
+
+		$filename = $this->completeSuffix( $className, 'Cest' );
+		$filename = $path . $filename;
+
+		if ( file_exists( $filename ) ) {
+			$output->writeln( "<error>Test $filename already exists</error>" );
+			return;
 		}
-		
-		$this->moduleContainer->validateConflicts();
-		$this->suite = $this->createSuite( $name );
-		if ( isset( $settings['current_environment'] ) ) {
-			$this->env = $settings['current_environment'];
+		$gen = new CestGenerator( $class, $config );
+		$res = $this->save( $filename, $gen->produce() );
+		if ( !$res ) {
+			$output->writeln( "<error>Test $filename already exists</error>" );
+			return;
 		}
+
+		$output->writeln( "<info>Test was created in $filename</info>" );
 	}
 
 }

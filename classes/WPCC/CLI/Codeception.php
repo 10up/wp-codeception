@@ -94,8 +94,8 @@ class Codeception extends \WP_CLI_Command {
 		$app->add( new \WPCC\Command\Build( 'build' ) );
 		$app->add( new \Codeception\Command\Console( 'console' ) );
 		$app->add( new \WPCC\Command\Bootstrap( 'bootstrap' ) );
-		$app->add( new \Codeception\Command\GenerateCept( 'generate-cept' ) );
-		$app->add( new \Codeception\Command\GenerateCest( 'generate-cest' ) );
+		$app->add( new \WPCC\Command\GenerateCept( 'generate-cept' ) );
+		$app->add( new \WPCC\Command\GenerateCest( 'generate-cest' ) );
 		$app->add( new \Codeception\Command\GenerateTest( 'generate-test' ) );
 		$app->add( new \Codeception\Command\GeneratePhpUnit( 'generate-phpunit' ) );
 		$app->add( new \Codeception\Command\GenerateSuite( 'generate-suite' ) );

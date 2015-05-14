@@ -20,7 +20,8 @@
 
 namespace WPCC\Command;
 
-use WPCC\Configuration;
+use Codeception\Configuration;
+use WPCC\Component\Generator\Actions as ActionsGenerator;
 use WPCC\Component\Generator\Actor as ActorGenerator;
 
 /**
@@ -53,19 +54,28 @@ class Build extends \Codeception\Command\Build {
 			$this->buildActorsForConfig( $dir . DIRECTORY_SEPARATOR . $subConfig );
 		}
 
-		if ( !empty( $suites ) ) {
+		if ( ! empty( $suites ) ) {
 			$this->output->writeln( "<info>Building Actor classes for suites: " . implode( ', ', $suites ) . '</info>' );
 		}
+
 		foreach ( $suites as $suite ) {
 			$settings = $this->getSuiteConfig( $suite, $configFile );
-			$gen = new ActorGenerator( $settings );
-			$this->output->writeln( '<info>' . Configuration::config()['namespace'] . '\\' . $gen->getActorName() . "</info> includes modules: " . implode( ', ', $gen->getModules() ) );
-			$contents = $gen->produce();
+			$actionsGenerator = new ActionsGenerator( $settings );
+			$contents = $actionsGenerator->produce();
 
-			@mkdir( $settings['path'], 0755, true );
-			$file = $settings['path'] . $this->getClassName( $settings['class_name'] ) . '.php';
+			$actorGenerator = new ActorGenerator( $settings );
+			$file = $this->buildPath( Configuration::supportDir() . '_generated', $settings['class_name'] ) . $this->getClassName( $settings['class_name'] ) . 'Actions.php';
 			$this->save( $file, $contents, true );
-			$this->output->writeln( "{$settings['class_name']}.php generated successfully. " . $gen->getNumMethods() . " methods added" );
+
+			$this->output->writeln( '<info>' . rtrim( $config['namespace'], '\\' ) . '\\' . $actorGenerator->getActorName() . "</info> includes modules: " . implode( ', ', $actorGenerator->getModules() ) );
+			$this->output->writeln( " -> {$settings['class_name']}Actions.php generated successfully. " . $actionsGenerator->getNumMethods() . " methods added" );
+
+			$contents = $actorGenerator->produce();
+
+			$file = $this->buildPath( Configuration::supportDir(), $settings['class_name'] ) . $this->getClassName( $settings['class_name'] ) . '.php';
+			if ( $this->save( $file, $contents ) ) {
+				$this->output->writeln( "{$settings['class_name']}.php created." );
+			}
 		}
 	}
 

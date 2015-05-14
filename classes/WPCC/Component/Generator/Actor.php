@@ -20,7 +20,9 @@
 
 namespace WPCC\Component\Generator;
 
-use WPCC\Configuration;
+use Codeception\Configuration;
+use Codeception\Lib\Di;
+use WPCC\ModuleContainer;
 
 /**
  * Generates actor classes based on provided configuration.
@@ -42,8 +44,16 @@ class Actor extends \Codeception\Lib\Generator\Actor {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
-		$this->modules = Configuration::modules( $settings );
-		$this->actions = Configuration::actions( $this->modules );
+		$this->di = new Di();
+		$this->moduleContainer = new ModuleContainer( $this->di, $settings );
+
+		$modules = Configuration::modules( $this->settings );
+		foreach ( $modules as $moduleName ) {
+			$this->moduleContainer->create( $moduleName );
+		}
+
+		$this->modules = $this->moduleContainer->all();
+		$this->actions = $this->moduleContainer->getActions();
 	}
 
 }

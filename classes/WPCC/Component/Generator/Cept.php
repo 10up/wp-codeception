@@ -18,49 +18,43 @@
 // | MA 02110-1301 USA                                                    |
 // +----------------------------------------------------------------------+
 
-namespace WPCC;
+namespace WPCC\Component\Generator;
 
-use Codeception\Configuration;
-use Codeception\Lib\Di;
-use Codeception\Lib\GroupManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Util\Template;
 
 /**
- * Suite manager class.
+ * Cept files generator.
  *
  * @since 1.0.0
  * @category WPCC
+ * @package Component
+ * @subpackage Generator
  */
-class SuiteManager extends \Codeception\SuiteManager {
+class Cept extends \Codeception\Lib\Generator\Cept {
 
 	/**
-	 * Constructor.
+	 * Produces Cept file and returns it.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @access public
-	 * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
-	 * @param string $name The suite name.
-	 * @param array $settings The suite settings.
+	 * @return string The Cest file content.
 	 */
-	public function __construct( EventDispatcher $dispatcher, $name, array $settings ) {
-		$this->settings = $settings;
-		$this->dispatcher = $dispatcher;
-		$this->di = new Di();
-		$this->path = $settings['path'];
-		$this->groupManager = new GroupManager( $settings['groups'] );
-		$this->moduleContainer = new ModuleContainer( $this->di, $settings );
-
-		$modules = Configuration::modules( $this->settings );
-		foreach ( $modules as $moduleName ) {
-			$this->moduleContainer->create( $moduleName );
-		}
+	public function produce() {
+		$actor = $this->settings['class_name'];
+		$namespace = rtrim( $this->settings['namespace'], '\\' );
 		
-		$this->moduleContainer->validateConflicts();
-		$this->suite = $this->createSuite( $name );
-		if ( isset( $settings['current_environment'] ) ) {
-			$this->env = $settings['current_environment'];
+		$use = '';
+		if ( ! empty( $namespace ) ) {
+			$use = "\n\nuse {$namespace}\\$actor;\n";
 		}
+
+		$template = new Template( $this->template );
+
+		$template->place( 'actor', $actor );
+		$template->place( 'use', $use );
+
+		return $template->produce();
 	}
 
 }
