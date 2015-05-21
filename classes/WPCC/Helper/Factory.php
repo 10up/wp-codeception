@@ -28,98 +28,28 @@ use WPCC\Component\Factory\Term as TermsFactory;
  * @since 1.0.0
  * @category WPCC
  * @package Helper
+ *
+ * @property \WPCC\Component\Factory\Post $post
+ * @property \WPCC\Component\Factory\Attachment $attachment
+ * @property \WPCC\Component\Factory\Comment $comment
+ * @property \WPCC\Component\Factory\User $user
+ * @property \WPCC\Component\Factory\Term $term
+ * @property \WPCC\Component\Factory\Term $category
+ * @property \WPCC\Component\Factory\Term $tag
+ * @property \WPCC\Component\Factory\Blog $blog
+ * @property \WPCC\Component\Factory\Network $network
  */
 class Factory {
 
 	/**
-	 * Posts factory.
+	 * The array of registered factories.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Post
+	 * @access protected
+	 * @var array
 	 */
-	public $post;
-
-	/**
-	 * Attachments factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Attachment
-	 */
-	public $attachment;
-
-	/**
-	 * Comments factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Comment
-	 */
-	public $comment;
-
-	/**
-	 * Users factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\User
-	 */
-	public $user;
-
-	/**
-	 * Terms factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Term
-	 */
-	public $term;
-
-	/**
-	 * Categories factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Term
-	 */
-	public $category;
-
-	/**
-	 * Tags factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Term
-	 */
-	public $tag;
-
-	/**
-	 * Blogs factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Blog
-	 */
-	public $blog;
-
-	/**
-	 * Networks factory.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @access public
-	 * @var \WPCC\Component\Factory\Network
-	 */
-	public $network;
+	protected $_factories = array();
 
 	/**
 	 * Constructor.
@@ -129,19 +59,75 @@ class Factory {
 	 * @access public
 	 */
 	public function __construct() {
-		$this->user = new \WPCC\Component\Factory\User();
-
-		$this->post = new \WPCC\Component\Factory\Post();
-		$this->attachment = new \WPCC\Component\Factory\Attachment();
-		$this->comment = new \WPCC\Component\Factory\Comment();
-
-		$this->term = new TermsFactory();
-		$this->category = new TermsFactory( 'category' );
-		$this->tag = new TermsFactory( 'post_tag' );
+		$this->_factories = array(
+			'user'       => new \WPCC\Component\Factory\User(),
+			'post'       => new \WPCC\Component\Factory\Post(),
+			'attachment' => new \WPCC\Component\Factory\Attachment(),
+			'comment'    => new \WPCC\Component\Factory\Comment(),
+			'term'       => new TermsFactory(),
+			'category'   => new TermsFactory( 'category' ),
+			'tag'        => new TermsFactory( 'post_tag' ),
+		);
 
 		if ( is_multisite() ) {
-			$this->blog = new \WPCC\Component\Factory\Blog();
-			$this->network = new \WPCC\Component\Factory\Network();
+			$this->_factories['blog'] = new \WPCC\Component\Factory\Blog();
+			$this->_factories['network'] = new \WPCC\Component\Factory\Network();
+		}
+	}
+
+	/**
+	 * Returns concrete factory.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $factory The factory name.
+	 * @return \WPCC\Component\Factory The factory object if available, otherwise NULL.
+	 */
+	public function __get( $factory ) {
+		return isset( $this->_factories[ $factory ] )
+			? $this->_factories[ $factory ]
+			: null;
+	}
+
+	/**
+	 * Registers new terms factory.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $factory_name The factory name.
+	 * @param string $taxonomy The taxonomy name.
+	 * @return boolean TRUE on success, otherwise FALSE.
+	 */
+	public function addTermsFactory( $factory_name, $taxonomy ) {
+		// do nothing if factory name is already taken
+		if ( ! empty( $this->_factories[ $factory_name ] ) ) {
+			return false;
+		}
+
+		// do nothing if a taxonomy doesn't exist
+		if ( ! taxonomy_exists( $taxonomy ) ) {
+			return false;
+		}
+
+		$this->_factories[ $factory_name ] = new TermsFactory( $taxonomy );
+		
+		return true;
+	}
+
+	/**
+	 * Cleans up all factories.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function cleanup() {
+		foreach ( $this->_factories as $factory ) {
+			if ( $factory instanceof \WPCC\Component\Factory ) {
+				$factory->deleteAll();
+			}
 		}
 	}
 
