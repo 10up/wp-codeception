@@ -21,6 +21,7 @@
 namespace WPCC\Component\Factory;
 
 use WPCC\Component\Generator\Sequence;
+use WPCC\Component\Generator\Sequence\Faker as FakerSequence;
 
 /**
  * Terms factory.
@@ -53,11 +54,12 @@ class Term extends \WPCC\Component\Factory {
 	 * @param string $taxonomy The taxonomy name.
 	 */
 	public function __construct( $taxonomy = null ) {
-		$this->_taxonomy = $taxonomy ? $taxonomy : self::DEFAULT_TAXONOMY;
+		$this->_taxonomy = $taxonomy ?: self::DEFAULT_TAXONOMY;
+		
 		parent::__construct( array(
 			'name'        => new Sequence( 'Term %s' ),
 			'taxonomy'    => $this->_taxonomy,
-			'description' => new Sequence( 'Term description %s' ),
+			'description' => new FakerSequence( 'paragraphs' ),
 		) );
 	}
 
@@ -100,6 +102,26 @@ class Term extends \WPCC\Component\Factory {
 		}
 		
 		return $term_id_pair['term_id'];
+	}
+
+	/**
+	 * Deletes previously generated term.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param int $term_id The term id to delete.
+	 * @return boolean TRUE on success, otherwise FALSE.
+	 */
+	protected function _deleteObject( $term_id ) {
+		$term = get_term_by( 'id', $term_id, $this->_taxonomy );
+		if ( ! $term || is_wp_error( $term ) ) {
+			return false;
+		}
+
+		$deleted = wp_delete_term( $term_id, $this->_taxonomy );
+
+		return ! empty( $deleted ) && !is_wp_error( $deleted );
 	}
 
 	/**

@@ -78,6 +78,26 @@ class Post extends \WPCC\Component\Factory {
 	}
 
 	/**
+	 * Deletes previously generated post object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param int $post_id The post id to delete.
+	 * @return boolean TRUE on success, otherwise FALSE.
+	 */
+	protected function _deleteObject( $post_id ) {
+		$post = get_post( $post_id );
+		if ( ! $post ) {
+			return false;
+		}
+
+		$deleted = wp_delete_post( $post_id, true );
+		
+		return ! empty( $deleted ) && ! is_wp_error( $deleted );
+	}
+
+	/**
 	 * Returns generated post by id.
 	 *
 	 * @since 1.0.0
@@ -89,4 +109,5 @@ class Post extends \WPCC\Component\Factory {
 	public function getObjectById( $post_id ) {
 		return get_post( $post_id );
 	}
+
 }

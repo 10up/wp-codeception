@@ -77,6 +77,26 @@ class Comment extends \WPCC\Component\Factory {
 	}
 
 	/**
+	 * Deletes previously generated comment.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param int $comment_id The comment id.
+	 * @return boolean TRUE on success, otherwise FALSE.
+	 */
+	protected function _deleteObject( $comment_id ) {
+		$comment = get_comment( $comment_id );
+		if ( ! $comment || is_wp_error( $comment ) ) {
+			return false;
+		}
+
+		$deleted = wp_delete_comment( $comment_id, true );
+
+		return ! empty( $deleted ) && ! is_wp_error( $deleted );
+	}
+
+	/**
 	 * Creates comments for a post.
 	 *
 	 * @since 1.0.0

@@ -92,6 +92,26 @@ class Blog extends \WPCC\Component\Factory {
 	}
 
 	/**
+	 * Deletes previously generated blog.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @global \wpdb $wpdb The database connection.
+	 * @param int $blog_id The blog id.
+	 * @return boolean Always returns TRUE.
+	 */
+	protected function _deleteObject( $blog_id ) {
+		global $wpdb;
+		
+		$suppress = $wpdb->suppress_errors();
+		wpmu_delete_blog( $blog_id, true );
+		$wpdb->suppress_errors( $suppress );
+
+		return true;
+	}
+
+	/**
 	 * Returns generated blog by id.
 	 *
 	 * @since 1.0.0

@@ -77,6 +77,26 @@ class User extends \WPCC\Component\Factory {
 	}
 
 	/**
+	 * Deletes previously generated user.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @param int $user_id The user id to delete.
+	 * @return boolean TRUEY on success, otherwise FALSE.
+	 */
+	protected function _deleteObject( $user_id ) {
+		$user = get_user_by( 'id', $user_id );
+		if ( ! $user ) {
+			return false;
+		}
+
+		$deleted = wp_delete_user( $user_id );
+
+		return ! empty( $deleted ) && ! is_wp_error( $deleted );
+	}
+
+	/**
 	 * Returns generated user by id.
 	 *
 	 * @since 1.0.0

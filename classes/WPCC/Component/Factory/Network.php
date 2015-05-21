@@ -91,6 +91,39 @@ class Network extends \WPCC\Component\Factory {
 	}
 
 	/**
+	 * Deletes previously generated network.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access protected
+	 * @global \wpdb $wpdb The database connection.
+	 * @param int $network_id The network id.
+	 * @return boolean TRUE on success, otherwise FALSE.
+	 */
+	protected function _deleteObject( $network_id ) {
+		global $wpdb;
+
+		$network_blog = wp_get_sites( array( 'network_id' => $network_id ) );
+		if ( ! empty( $network_blog ) ) {
+			$suppress = $wpdb->suppress_errors();
+			
+			foreach ( $network_blog as $blog ) {
+				wpmu_delete_blog( $blog->blog_id, true );
+			}
+	
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$deleted = $wpdb->delete( $wpdb->site, array( 'id' => $network_id ), array( '%d' ) );
+		if ( $deleted ) {
+			$wpdb->delete( $wpdb->sitemeta, array( 'site_id' => $network_id ), array( '%d' ) );
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns generated network by id.
 	 *
 	 * @since 1.0.0
