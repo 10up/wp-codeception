@@ -20,7 +20,6 @@
 
 namespace WPCC\Component\Factory;
 
-use WPCC\Component\Generator\Sequence;
 use WPCC\Component\Generator\Sequence\Faker as FakerSequence;
 
 /**
@@ -42,7 +41,7 @@ class User extends \WPCC\Component\Factory {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'user_login' => new Sequence( 'User %s' ),
+			'user_login' => new FakerSequence( 'name' ),
 			'user_pass'  => 'password',
 			'user_email' => new FakerSequence( 'email' ),
 		) );
@@ -91,7 +90,9 @@ class User extends \WPCC\Component\Factory {
 			return false;
 		}
 
-		$deleted = wp_delete_user( $user_id );
+		$deleted = is_multisite()
+			? wpmu_delete_user( $user_id )
+			: wp_delete_user( $user_id );
 
 		return ! empty( $deleted ) && ! is_wp_error( $deleted );
 	}
