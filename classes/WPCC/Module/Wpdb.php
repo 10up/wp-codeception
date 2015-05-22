@@ -67,14 +67,18 @@ class Wpdb extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 	 */
 	protected function _prepareQuery( $table, $columns, $criteria ) {
 		$where = '1 = 1';
+		$params = array();
+		
 		foreach ( $criteria as $column => $value ) {
 			$pattern = '%s';
 			if ( is_null( $value ) ) {
 				$pattern = '%s AND `%s` IS NULL';
 			} elseif ( is_numeric( $value ) ) {
 				$pattern = '%s AND `%s` = %%d';
+				$params[] = $value;
 			} else {
 				$pattern = '%s AND `%s` = %%s';
+				$params[] = $value;
 			}
 
 			$where = sprintf( $pattern, $where, $column );
@@ -85,7 +89,7 @@ class Wpdb extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 		}
 
 		$query = sprintf( 'SELECT %s FROM %s WHERE %s', $columns, $table, $where );
-		$query = $this->_wpdb->prepare( $query, $criteria );
+		$query = $this->_wpdb->prepare( $query, $params );
 
 		return $query;
 	}
