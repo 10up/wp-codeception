@@ -76,6 +76,19 @@ class Factory {
 	}
 
 	/**
+	 * Creates a new instance of the factory and returns it.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @static
+	 * @access public
+	 * @return \WPCC\Helper\Factory The factory instance.
+	 */
+	public static function create() {
+		return new static();
+	}
+
+	/**
 	 * Returns concrete factory.
 	 *
 	 * @since 1.0.0
