@@ -89,7 +89,9 @@ class Wpdb extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 		}
 
 		$query = sprintf( 'SELECT %s FROM %s WHERE %s', $columns, $table, $where );
-		$query = $this->_wpdb->prepare( $query, $params );
+		if ( ! empty( $params ) ) {
+			$query = $this->_wpdb->prepare( $query, $params );
+		}
 
 		return $query;
 	}
@@ -107,7 +109,15 @@ class Wpdb extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 		$query = $this->_prepareQuery( $table, 'count(*)', $criteria );
 		$this->debugSection( 'Query', $query );
 
+		$suppress_errors = $this->_wpdb->suppress_errors( true );
 		$res = $this->_wpdb->get_var( $query );
+		$this->_wpdb->suppress_errors( $suppress_errors );
+
+		if ( ! empty( $this->_wpdb->last_error ) ) {
+			$this->fail( 'Database error: ' . $this->_wpdb->last_error );
+			return;
+		}
+
 		$this->assertGreaterThan( 0, $res, 'No matching records found' );
 	}
 
@@ -124,7 +134,15 @@ class Wpdb extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 		$query = $this->_prepareQuery( $table, 'count(*)', $criteria );
 		$this->debugSection( 'Query', $query );
 
+		$suppress_errors = $this->_wpdb->suppress_errors( true );
 		$res = $this->_wpdb->get_var( $query );
+		$this->_wpdb->suppress_errors( $suppress_errors );
+
+		if ( ! empty( $this->_wpdb->last_error ) ) {
+			$this->fail( 'Database error: ' . $this->_wpdb->last_error );
+			return;
+		}
+
 		$this->assertLessThan( 1, $res, 'Matching records found' );
 	}
 
@@ -143,7 +161,16 @@ class Wpdb extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 		$query = $this->_prepareQuery( $table, $columns, $criteria );
 		$this->debugSection( 'Query', $query );
 
-		return $this->_wpdb->get_results( $query );
+		$suppress_errors = $this->_wpdb->suppress_errors( true );
+		$results = $this->_wpdb->get_results( $query );
+		$this->_wpdb->suppress_errors( $suppress_errors );
+
+		if ( ! empty( $this->_wpdb->last_error ) ) {
+			$this->fail( 'Database error: ' . $this->_wpdb->last_error );
+			return;
+		}
+
+		return $results;
 	}
 
 }
