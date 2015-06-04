@@ -50,23 +50,80 @@ class Codeception extends \WP_CLI_Command {
 	 * <test>
 	 * : The test name to run.
 	 *
+	 * <config>
+	 * : Path to the custom config file.
+	 *
+	 * <report>
+	 * : Determines whether to show output in compact style or not.
+	 *
+	 * <html>
+	 * : Tells to generate html with results (default: "report.html").
+	 *
+	 * <xml>
+	 * : Tells to generate JUnit XML Log (default: "report.xml").
+	 *
+	 * <tap>
+	 * : Tells to generate Tap Log (default: "report.tap.log").
+	 *
+	 * <json>
+	 * : Tells to generate Json Log (default: "report.json").
+	 *
+	 * <colors>
+	 * : Tells to use colors in output.
+	 *
+	 * <no-colors>
+	 * : Forces no colors in output (useful to override config file).
+	 *
+	 * <silent>
+	 * : Tells to output only suite names and final results.
+	 *
 	 * <steps>
 	 * : Determines whether to show test steps in output or not.
 	 *
 	 * <debug>
 	 * : Determines whether to show debug and scenario output or not.
 	 *
+	 * <coverage>
+	 * : Determines whether to run with code coverage (default: "coverage.serialized") or not.
+	 *
+	 * <coverage-html>
+	 * : Tells to generate CodeCoverage HTML report in path (default: "coverage").
+	 * 
+	 * <coverage-xml>
+	 * : Tells to generate CodeCoverage XML report in file (default: "coverage.xml").
+	 * 
+	 * <coverage-text>
+	 * : Tells to generate CodeCoverage text report in file (default: "coverage.txt").
+	 * 
+	 * <no-exit>
+	 * : Tells to not finish with exit code.
+	 * 
 	 * <env>
 	 * : Environment to use during tests execution.
+	 * 
+	 * <fail-fast>
+	 * : Tells to stop after first failure.
+	 *
+	 * <quiet>
+	 * : Tells to not output any message.
+	 * 
+	 * <ansi>
+	 * : Forces ANSI output.
+	 *
+	 * <no-ansi>
+	 * : Tells to disable ANSI output.
+	 *
+	 * <no-interaction>
+	 * : Tells to not ask any interactive question.
 	 *
 	 * ### EXAMPLE
 	 *
 	 *     wp codeception run
-	 *     wp codeception run --steps
-	 *     wp codeception run --debug
-	 *     wp codeception run --env=staging
+	 *     wp codeception run acceptance --steps --html
+	 *     wp codeception run acceptance MyAwesomeTest --debug
+	 *     wp codeception run functional --env=staging
 	 *
-	 * @synopsis [<suite>] [<test>] [--steps] [--debug] [--env=<env>]
+	 * @synopsis [<suite>] [<test>] [--config=<config>] [--report] [--html=<html>] [--xml=<xml>] [--tap=<tap>] [--json=<json>] [--colors] [--no-colors] [--silent] [--steps] [--debug] [--coverage] [--coverage-html] [--coverage-xml] [--coverage-text] [--no-exit] [--env=<env>] [--fail-fast] [--quiet] [--ansi] [--no-ansi] [--no-interaction]
 	 *
 	 * @since 1.0.0
 	 *
