@@ -44,11 +44,35 @@ class ArgvInput extends \Symfony\Component\Console\Input\ArgvInput {
 	 */
 	public function __construct( array $args = null, InputDefinition $definition = null ) {
 		global $argv;
+		
 		if ( is_null( $args ) ) {
 			$args = array_slice( (array) $argv, 1 );
+			$args = array_filter( $args, array( $this, 'filter_arguments' ) );
+			$args = array_values( $args );
 		}
 
 		parent::__construct( $args, $definition );
+	}
+
+	/**
+	 * Removes WP_CLI related arguments from input for Codeception commands to escape conflicts.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 * @param string $arg The argument.
+	 * @return boolean TRUE if argument has to be left in the input array, otherwise FALSE.
+	 */
+	public function filter_arguments( $arg ) {
+		$patterns = array( 'url=', 'path=', 'user=', 'skip-plugins=?', 'skip-themes=?', 'require=', 'no-color', 'color', 'prompt' );
+
+		foreach ( $patterns as $pattern ) {
+			if ( preg_match( "~^--{$pattern}~i", $arg ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
