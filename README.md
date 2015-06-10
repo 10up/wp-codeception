@@ -2,6 +2,8 @@
 
 ## Installation
 
+Run from within VVV
+
 ```
 sudo apt-get install openjdk-6-jre-headless
 
