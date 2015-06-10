@@ -39,17 +39,18 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 
 // do nothing if Composer is no installed
 if ( ! class_exists( 'Codeception\Codecept' ) ) {
-	return;
+
+	// load autoloader
+	if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+		require_once __DIR__ . '/vendor/autoload.php';
+	} else {
+		return;
+	}
 }
 
 // define basic constants
 define( 'WPCC_VERSION', '1.0.0-dev' );
 define( 'WPCC_ABSPATH', __DIR__ );
-
-// load autoloader
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require_once __DIR__ . '/vendor/autoload.php';
-}
 
 // register CLI commands
 WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
