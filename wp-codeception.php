@@ -1,13 +1,13 @@
 <?php
-/*
-Plugin Name: WP Codeception
-Plugin URI:
-Description: Registers WP-CLI commands which allow you to execute Codeception tests.
-Author: 10up Inc
-Author URI: https://10up.com/
-Version: 1.0.0-dev
-License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-*/
+/**
+ * Plugin Name: WP Codeception
+ * Plugin URI: https://github.com/10up/wp-codeception
+ * Description: Registers WP-CLI commands which allow you to execute Codeception tests.
+ * Author: 10up Inc
+ * Author URI: https://10up.com/
+ * Version: 1.0.0-dev
+ * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ */
 
 // +----------------------------------------------------------------------+
 // | Copyright 2015 10up Inc                                              |
@@ -38,7 +38,7 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 }
 
 // do nothing if Composer is no installed
-if ( ! file_exists( __DIR__ . '/vendor/codeception/codeception/autoload.php' ) ) {
+if ( ! class_exists( 'Codeception\Codecept' ) ) {
 	return;
 }
 
@@ -47,7 +47,9 @@ define( 'WPCC_VERSION', '1.0.0-dev' );
 define( 'WPCC_ABSPATH', __DIR__ );
 
 // load autoloader
-require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 // register CLI commands
 WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
