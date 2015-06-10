@@ -1,4 +1,5 @@
 {
+	"name": "10up/wp-codeception",
 	"require": {
 		"codeception/codeception": "2.0.11",
 		"fzaninotto/faker": "1.5.*@dev"
