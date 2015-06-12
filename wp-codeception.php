@@ -49,7 +49,7 @@ if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 	if ( ! class_exists( 'Codeception\Codecept' ) ) {
 		try {
 			require_once __DIR__ . '/vendor/autoload.php';
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			WP_CLI::error( 'You must run composer first if running this as a standalone plugin' );
 		}
 	}
