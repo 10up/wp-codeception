@@ -4,7 +4,7 @@ This plugin integrates the [Codeception](http://codeception.com/) PHP testing fr
 We're working towards supporting all of [Codeceptions commands](http://codeception.com/docs/reference/Commands). If you find one we haven't included yet, please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)!
 
 ## Installation
-[Download the latest version](https://github.com/10up/wp-codeception/archive/master.zip) and extract, or clone the repository with Git into a new directory wp-content/plugins/wp-codeception in your WordPress install.
+[Download the latest version](https://github.com/10up/wp-codeception/archive/master.zip) and extract, or clone the repository with Git into a new directory `wp-content/plugins/wp-codeception` in your WordPress install.
 
 ### Install required node modules and composer dependencies
 
@@ -20,7 +20,7 @@ $ npm install
 $ composer install
 ```
 
-Afterwards you'll have a new 'vendor/' directory within your plugins/wp-codeception directory which contains all the code libraries we're dependant on.
+Afterwards you'll have a new `vendor` directory within your plugins/wp-codeception directory which contains all the code libraries we're dependant on.
 
 ### Install the test suite
 
@@ -31,10 +31,10 @@ See the [Codeception bootstrapping documentation](http://codeception.com/docs/re
 $ wp codeception bootstrap
 ```
 
-Afterwards you'll have a new 'tests/' directory within the wp-codeception plugin. This is your new test suite, and where you'll write all your tests. 
+Afterwards you'll have a new `tests` directory within the wp-codeception plugin. This is your new test suite, and where you'll write all your tests. 
 
 ## Writing Tests
-You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: Acceptance, Functional, and Unit Testing. If you look within the new 'tests/' directory you'll see three config files (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish  
+You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: Acceptance, Functional, and Unit Testing. If you look within the new `tests` directory you'll see three config files (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish  
 
 *Generate your first test*
 ```Bash
