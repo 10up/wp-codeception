@@ -32,25 +32,29 @@ if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
 	return;
 }
 
-// do nothing if WP_CLI is not defined
+// Do nothing if WP_CLI is not defined
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	return;
 }
 
-// do nothing if Composer is no installed
-if ( ! class_exists( 'Codeception\Codecept' ) ) {
-	return;
+// Only ever load wp-codeception once
+if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
+
+	// Define constants
+	define( 'WPCC_VERSION', '1.0.0-dev' );
+	define( 'WPCC_ABSPATH', __DIR__ );
+	define( 'WP_CODECEPTION_LOADED', true );
+
+	// See if the codeception library is available, if not, try to load it
+	if ( ! class_exists( 'Codeception\Codecept' ) ) {
+		try {
+			require_once __DIR__ . '/vendor/autoload.php';
+		} catch ( \Exception $e ) {
+			WP_CLI::error( 'You must run composer first if running this as a standalone plugin' );
+		}
+	}
+
+	// Register WP-CLI commands
+	WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
+	WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );
 }
-
-// define basic constants
-define( 'WPCC_VERSION', '1.0.0-dev' );
-define( 'WPCC_ABSPATH', __DIR__ );
-
-// load autoloader
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require_once __DIR__ . '/vendor/autoload.php';
-}
-
-// register CLI commands
-WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
-WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );
