@@ -59,3 +59,92 @@ if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 	WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );
 	
 }
+
+/**
+ * Following functions were copied from the Codeception's autoload file, because
+ * we are not going to load it anymore, but these functions are still required
+ * and used in the depths of the framework, so we have to load it here.
+ */
+
+if ( ! function_exists( 'codecept_debug' ) ) {
+
+	/**
+	 * Registers debug message which will be printed if --debug argument is passed to the command.
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param mixed $data The debug data, it will be serialized if we need to display it.
+	 */
+	function codecept_debug( $data ) {
+		\Codeception\Util\Debug::debug( $data );
+	}
+
+}
+
+if ( ! function_exists( 'codecept_root_dir' ) ) {
+
+	/**
+	 * Returns absolute path to the requested object which is expected to be in
+	 * the root directory of a testing project.
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param string $appendPath A relative path to the requested object.
+	 * @return string The absolute path to the object.
+	 */
+	function codecept_root_dir( $appendPath = '' ) {
+		return \Codeception\Configuration::projectDir() . $appendPath;
+	}
+	
+}
+
+if ( ! function_exists( 'codecept_output_dir' ) ) {
+
+	/**
+	 * Returns absolute path to the requested object which is expected to be in
+	 * the output directory of a testing project.
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param string $appendPath A relative path to the requested object.
+	 * @return string The absolute path to the object.
+	 */
+	function codecept_output_dir( $appendPath = '' ) {
+		return \Codeception\Configuration::outputDir() . $appendPath;
+	}
+
+}
+
+if ( ! function_exists( 'codecept_log_dir' ) ) {
+
+	/**
+	 * Returns absolute path to the requested object which is expected to be in
+	 * the log directory of a testing project.
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param string $appendPath A relative path to the requested object.
+	 * @return string The absolute path to the object.
+	 */
+	function codecept_log_dir( $appendPath = '' ) {
+		return \Codeception\Configuration::outputDir() . $appendPath;
+	}
+
+}
+
+if ( ! function_exists( 'codecept_data_dir' ) ) {
+
+	/**
+	 * Returns absolute path to the requested object which is expected to be in
+	 * the data directory of a testing project.
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param string $appendPath A relative path to the requested object.
+	 * @return string The absolute path to the object.
+	 */
+	function codecept_data_dir( $appendPath = '' ) {
+		return \Codeception\Configuration::dataDir() . $appendPath;
+	}
+
+}
