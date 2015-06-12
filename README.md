@@ -80,7 +80,7 @@ Now you've written some tests, it's time to run them! But first..
 If you've created any browser automation/acceptance tests you'll need to turn [Selenium](http://www.seleniumhq.org/) on, and likewise, you'll want to stop Selenium after you're through running tests.
 
 ```Bash
-# You should still be in your plguins/wp-codeception directory
+# You can run these commands from anywhere in your WordPress install
 $ wp selenium start
 
 # Stop Selenium when you're through
