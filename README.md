@@ -1,12 +1,12 @@
 # WP Codeception
-This plugin integrates the [Codeception](http://codeception.com/) PHP testing framework into WordPress and allows you to run tests using WP CLI.
+This is a WordPress Plugin which integrates with the [Codeception](http://codeception.com/) PHP testing framework and allows you to write and run Codeception tests for WordPress via WP CLI.
 
 We're working towards supporting all of [Codeceptions commands](http://codeception.com/docs/reference/Commands). If you find one we haven't included yet, please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)!
 
 ## Installation
 [Download the latest version](https://github.com/10up/wp-codeception/archive/master.zip) and extract, or clone the repository with Git into a new directory `wp-content/plugins/wp-codeception` in your WordPress install.
 
-### Install required node modules and composer dependencies
+#### Install required node modules and composer dependencies
 
 We'll run our commands from within [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV) because WP CLI, Node, and Composer are already installed for us there. 
  
@@ -22,7 +22,7 @@ $ composer install
 
 Afterwards you'll have a new `vendor` directory within your `plugins/wp-codeception` directory which contains all the code libraries we're dependant on.
 
-### Install the test suite
+#### Install the test suite
 
 See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information. 
 
@@ -48,7 +48,7 @@ $ wp codeception generate-cept acceptance LoginTest
 
 Afterwards you'll have a new file in your plugin or theme directory `tests/acceptance/LoginTest.php`, where you can write your first test. Remember, any Codeception test will work here! For example, you could run any of the [acceptance test examples](http://codeception.com/docs/04-AcceptanceTests) mentioned in the Codeception documentation. Likewise, the same goes for [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit tests](http://codeception.com/docs/06-UnitTests).
 
-### Example: Writing Login Acceptance Test
+#### Example: Writing Login Acceptance Test
 ```PHP
 <?php
 
@@ -76,7 +76,7 @@ $I->see( 'Dashboard' );
 ## Running Your Tests
 Now you've written some tests, it's time to run them! But first..
 
-### Selenium
+#### Selenium
 If you've created any browser automation/acceptance tests you'll need to turn [Selenium](http://www.seleniumhq.org/) on, and likewise, you'll want to stop Selenium after you're through running tests.
 
 ```Bash
@@ -87,7 +87,7 @@ $ wp selenium start
 $ wp selenium stop
 ```
 
-### Run
+#### Run
 You'll use the `run` command to execute your tests from within your plugin or theme directory (where you ran the bootstrap). We've implemented most of the [Codeception 'run' command](http://codeception.com/docs/reference/Commands#Run) arguments, but if you find one we've missed please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)! 
  
 ```Bash
@@ -95,7 +95,7 @@ You'll use the `run` command to execute your tests from within your plugin or th
 $ wp codeception run
 ```
 
-### Example: Running our Login Test
+#### Example: Running our Login Test
 ```Bash
 # You should be in the plugin or theme directory where you ran the bootstrap
 # Let's display verbose output
