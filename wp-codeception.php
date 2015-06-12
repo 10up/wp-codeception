@@ -5,7 +5,7 @@
  * Description: Registers WP-CLI commands which allow you to execute Codeception tests.
  * Author: 10up Inc
  * Author URI: https://10up.com/
- * Version: 1.0.0-dev
+ * Version: 1.0.1
  * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
@@ -41,7 +41,7 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 
 	// Define constants
-	define( 'WPCC_VERSION', '1.0.0-dev' );
+	define( 'WPCC_VERSION', '1.0.1' );
 	define( 'WPCC_ABSPATH', __DIR__ );
 	define( 'WP_CODECEPTION_LOADED', true );
 
@@ -49,7 +49,7 @@ if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 	if ( ! class_exists( 'Codeception\Codecept' ) ) {
 		try {
 			require_once __DIR__ . '/vendor/autoload.php';
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			WP_CLI::error( 'You must run composer first if running this as a standalone plugin' );
 		}
 	}
@@ -57,4 +57,5 @@ if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 	// Register WP-CLI commands
 	WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
 	WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );
+	
 }
