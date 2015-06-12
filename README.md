@@ -24,28 +24,28 @@ Afterwards you'll have a new `vendor` directory within your plugins/wp-codecepti
 
 ### Install the test suite
 
-See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information.
+See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information. 
 
 ```Bash
-# You should still be in your plguins/wp-codeception directory
+# You should still be in your plugin or theme directory
 $ wp codeception bootstrap
 ```
 
-Afterwards you'll have a new `tests` directory within the wp-codeception plugin. This is your new test suite, and where you'll write all your tests. 
+Afterwards you'll have a new `tests` directory within your plugin or theme directory. This is your new test suite, and where you'll write all your tests. 
 
 ## Writing Tests
 You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: Acceptance, Functional, and Unit Testing. If you look within the new `tests` directory you'll see three config files (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish  
 
 *Generate your first test*
 ```Bash
-# You should still be in your plguins/wp-codeception directory
+# You should be in the plugin or theme directory where you ran the bootstrap
 $ wp codeception generate-(cept|cest) (acceptance|functional|unit) MyTestName
 
 # Example
 $ wp codeception generate-cept acceptance LoginTest
 ```
 
-Afterwards you'll have a new file: `plugins/wp-codeception/tests/acceptance/LoginTest.php`, where you can write your first test. Remember, any Codeception test will work here! For example, you could run any of the [acceptance test examples](http://codeception.com/docs/04-AcceptanceTests) mentioned in the Codeception documentation. Likewise, the same goes for [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit tests](http://codeception.com/docs/06-UnitTests).
+Afterwards you'll have a new file in your plugin or theme directory `tests/acceptance/LoginTest.php`, where you can write your first test. Remember, any Codeception test will work here! For example, you could run any of the [acceptance test examples](http://codeception.com/docs/04-AcceptanceTests) mentioned in the Codeception documentation. Likewise, the same goes for [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit tests](http://codeception.com/docs/06-UnitTests).
 
 ### Example: Writing Login Acceptance Test
 ```PHP
@@ -87,16 +87,16 @@ $ wp selenium stop
 ```
 
 ### Run
-You'll use the `run` command to execute your tests. We've implemented most of the [Codeception 'run' command](http://codeception.com/docs/reference/Commands#Run) arguments, but if you find one we've missed please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)! 
+You'll use the `run` command to execute your tests from within your plugin or theme directory (where you ran the bootstrap). We've implemented most of the [Codeception 'run' command](http://codeception.com/docs/reference/Commands#Run) arguments, but if you find one we've missed please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)! 
  
 ```Bash
-# You should still be in your plguins/wp-codeception directory
+# You should be in the plugin or theme directory where you ran the bootstrap
 $ wp codeception run
 ```
 
 ### Example: Running our Login Test
 ```Bash
-# You should still be in your plguins/wp-codeception directory
+# You should be in the plugin or theme directory where you ran the bootstrap
 # Let's display verbose output
 $ wp codeception run -vvv
 
@@ -110,7 +110,7 @@ Modules: WebDriver, WordPress, AcceptanceHelper
 -----------------------------------------------------------------
 Ensure WordPress Login Works (LoginTest)
 Scenario:
-* I am on page "/wp-login.php"
+* I am on page "http://site.com/wp-login.php"
 * I fill field "input#user_login","YourUsername"
 * I fill field "input#user_pass","YourPassword"
 * I click "Login"
