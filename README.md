@@ -35,7 +35,7 @@ $ wp codeception bootstrap
 Afterwards you'll have a new `tests` directory within your plugin or theme directory. This is your new test suite, and where you'll write all your tests. 
 
 ## Writing Tests
-You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: Acceptance, Functional, and Unit Testing. If you look within the new `tests` directory you'll see three config files (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish  
+You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: [Acceptance](http://codeception.com/docs/04-AcceptanceTests), [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit](http://codeception.com/docs/06-UnitTests) testing. If you look within the new `tests` directory you'll see three config files; one for each test framework (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish.
 
 *Generate your first test*
 ```Bash
