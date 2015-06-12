@@ -105,9 +105,9 @@ Powered by PHPUnit 4.5.1 by Sebastian Bergmann and contributors.
 
   Rebuilding AcceptanceTester...
   
-Acceptance-production Tests (1) -----------------------------------------------------------------------------------------------------------------------
+Acceptance-production Tests (1) ---------------------------------
 Modules: WebDriver, WordPress, AcceptanceHelper
--------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------
 Ensure WordPress Login Works (LoginTest)
 Scenario:
 * I am on page "/wp-login.php"
