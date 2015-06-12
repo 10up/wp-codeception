@@ -20,14 +20,15 @@ $ npm install
 $ composer install
 ```
 
-Afterwards you'll have a new `vendor` directory within your plugins/wp-codeception directory which contains all the code libraries we're dependant on.
+Afterwards you'll have a new `vendor` directory within your `plugins/wp-codeception` directory which contains all the code libraries we're dependant on.
 
 ### Install the test suite
 
 See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information. 
 
 ```Bash
-# You should still be in your plugin or theme directory
+# You'll create the test suite in your own plugin or theme directory..
+$ cd /srv/www/yoursite/htdocs/wp-content/{your plugin or theme directory}
 $ wp codeception bootstrap
 ```
 
