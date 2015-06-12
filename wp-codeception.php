@@ -1,13 +1,13 @@
 <?php
-/*
-Plugin Name: WP Codeception
-Plugin URI:
-Description: Registers WP-CLI commands which allow you to execute Codeception tests.
-Author: 10up Inc
-Author URI: https://10up.com/
-Version: 1.0.0-dev
-License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-*/
+/**
+ * Plugin Name: WP Codeception
+ * Plugin URI: https://github.com/10up/wp-codeception
+ * Description: Registers WP-CLI commands which allow you to execute Codeception tests.
+ * Author: 10up Inc
+ * Author URI: https://10up.com/
+ * Version: 1.0.0-dev
+ * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ */
 
 // +----------------------------------------------------------------------+
 // | Copyright 2015 10up Inc                                              |
@@ -32,23 +32,29 @@ if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
 	return;
 }
 
-// do nothing if WP_CLI is not defined
+// Do nothing if WP_CLI is not defined
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	return;
 }
 
-// do nothing if Composer is no installed
-if ( ! file_exists( __DIR__ . '/vendor/codeception/codeception/autoload.php' ) ) {
-	return;
+// Only ever load wp-codeception once
+if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
+
+	// Define constants
+	define( 'WPCC_VERSION', '1.0.0-dev' );
+	define( 'WPCC_ABSPATH', __DIR__ );
+	define( 'WP_CODECEPTION_LOADED', true );
+
+	// See if the codeception library is available, if not, try to load it
+	if ( ! class_exists( 'Codeception\Codecept' ) ) {
+		try {
+			require_once __DIR__ . '/vendor/autoload.php';
+		} catch ( \Exception $e ) {
+			WP_CLI::error( 'You must run composer first if running this as a standalone plugin' );
+		}
+	}
+
+	// Register WP-CLI commands
+	WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
+	WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );
 }
-
-// define basic constants
-define( 'WPCC_VERSION', '1.0.0-dev' );
-define( 'WPCC_ABSPATH', __DIR__ );
-
-// load autoloader
-require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
-
-// register CLI commands
-WP_CLI::add_command( 'codeception', '\WPCC\CLI\Codeception' );
-WP_CLI::add_command( 'selenium', '\WPCC\CLI\Selenium' );

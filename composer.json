@@ -8,5 +8,10 @@
 		"psr-0": {
 			"WPCC": "classes"
 		}
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"npm install"
+		]
 	}
 }
