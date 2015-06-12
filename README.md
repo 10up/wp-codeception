@@ -37,7 +37,7 @@ Afterwards you'll have a new 'tests/' directory within the wp-codeception plugin
 You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: Acceptance, Functional, and Unit Testing. If you look within the new 'tests/' directory you'll see three config files (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish  
 
 *Generate your first test*
-```
+```Bash
 # You should still be in your plguins/wp-codeception directory
 $ wp codeception generate-(cept|cest) (acceptance|functional|unit) MyTestName
 
@@ -47,7 +47,7 @@ $ wp codeception generate-cept acceptance LoginTest
 
 Afterwards you'll have a new file: `plugins/wp-codeception/tests/acceptance/LoginTest.php`, where you can write your first test. Remember, any Codeception test will work here! For example, you could run any of the [acceptance test examples](http://codeception.com/docs/04-AcceptanceTests) mentioned in the Codeception documentation. Likewise, the same goes for [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit tests](http://codeception.com/docs/06-UnitTests).
 
-### Example Login Acceptance Test
+### Example: Writing Login Acceptance Test
 ```PHP
 <?php
 
@@ -92,15 +92,13 @@ You'll use the `run` command to execute your tests. We've implemented most of th
 ```Bash
 # You should still be in your plguins/wp-codeception directory
 $ wp codeception run
-
-# Example using verbose output argument
-$ wp codeception run -vvv
 ```
 
 ### Example: Running our Login Test
 ```Bash
 # You should still be in your plguins/wp-codeception directory
-$ wp codeception run
+# Let's display verbose output
+$ wp codeception run -vvv
 
 Codeception PHP Testing Framework v2.0.11
 Powered by PHPUnit 4.5.1 by Sebastian Bergmann and contributors.
