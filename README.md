@@ -1,5 +1,5 @@
 # WP Codeception
-This plugin integrates kthe [Codeception](http://codeception.com/) PHP testing framework into WordPress and allows you to run tests using WP CLI.
+This plugin integrates the [Codeception](http://codeception.com/) PHP testing framework into WordPress and allows you to run tests using WP CLI.
 
 We're working towards supporting all of [Codeceptions commands](http://codeception.com/docs/reference/Commands). If you find one we haven't included yet, please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)!
 
