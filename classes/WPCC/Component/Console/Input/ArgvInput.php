@@ -44,7 +44,7 @@ class ArgvInput extends \Symfony\Component\Console\Input\ArgvInput {
 	 */
 	public function __construct( array $args = null, InputDefinition $definition = null ) {
 		global $argv;
-		
+
 		if ( is_null( $args ) ) {
 			$args = array_slice( (array) $argv, 1 );
 			$args = array_filter( $args, array( $this, 'filter_arguments' ) );
@@ -64,7 +64,10 @@ class ArgvInput extends \Symfony\Component\Console\Input\ArgvInput {
 	 * @return boolean TRUE if argument has to be left in the input array, otherwise FALSE.
 	 */
 	public function filter_arguments( $arg ) {
-		$patterns = array( 'url=', 'path=', 'user=', 'skip-plugins=?', 'skip-themes=?', 'require=', 'no-color', 'color', 'prompt' );
+		$patterns = array(
+			'url=', 'path=', 'user=', 'skip-plugins=?', 'skip-themes=?',
+			'require=', 'no-color', 'color', 'prompt', 'allow-root',
+		);
 
 		foreach ( $patterns as $pattern ) {
 			if ( preg_match( "~^--{$pattern}~i", $arg ) ) {
