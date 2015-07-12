@@ -59,7 +59,20 @@ class Post extends \WPCC\Component\Factory {
 	 * @return int|\WP_Error The newly created post's ID on success, otherwise a WP_Error object.
 	 */
 	protected function _createObject( $args ) {
-		return wp_insert_post( $args, true );
+		$post_id = wp_insert_post( $args, true );
+		if ( $post_id && ! is_wp_error( $post_id ) ) {
+			$this->_debug( 'Generated post ID: ' . $post_id );
+		} elseif ( is_wp_error( $post_id ) ) {
+			$this->_debug(
+				'Post generation failed with message [%s] %s',
+				$post_id->get_error_code(),
+				$post_id->get_error_messages()
+			);
+		} else {
+			$this->_debug( 'Post generation failed' );
+		}
+
+		return $post_id;
 	}
 
 	/**
@@ -74,7 +87,21 @@ class Post extends \WPCC\Component\Factory {
 	 */
 	protected function _updateObject( $post_id, $fields ) {
 		$fields['ID'] = $post_id;
-		return wp_update_post( $fields );
+		$updated = wp_update_post( $fields );
+		if ( $updated && ! is_wp_error( $updated ) ) {
+			Debug::debugf( 'Updated post ' . $post_id );
+		} elseif ( is_wp_error( $updated ) ) {
+			Debug::debugf(
+				'Update failed for post %d with message [%s] %s',
+				$post_id,
+				$updated->get_error_code(),
+				$updated->get_error_message()
+			);
+		} else {
+			Debug::debugf( 'Update failed for post ' . $post_id );
+		}
+
+		return $updated;
 	}
 
 	/**
@@ -93,8 +120,13 @@ class Post extends \WPCC\Component\Factory {
 		}
 
 		$deleted = wp_delete_post( $post_id, true );
-		
-		return ! empty( $deleted ) && ! is_wp_error( $deleted );
+		if ( $deleted ) {
+			$this->_debug( 'Deleted post with ID: ' . $post_id );
+			return true;
+		}
+
+		$this->_debug( 'Post removal failed for %s post', $post_id );
+		return false;
 	}
 
 	/**

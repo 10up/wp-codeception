@@ -22,6 +22,7 @@ namespace WPCC\Component;
 
 use WPCC\Component\Generator\Sequence;
 use WPCC\Component\Factory\Callback\AfterCreate as AfterCreateCallback;
+use WPCC\Util\Debug;
 
 /**
  * Base class for all factory types.
@@ -56,14 +57,34 @@ abstract class Factory {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @access public
 	 * @param array $definitions Defines what default values should the properties of the object have.
 	 */
 	public function __construct( $definitions = array() ) {
 		$this->_definitions = $definitions;
+	}
+
+	/**
+	 * Displays debug message.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @access protected
+	 * @param string $message Debug message.
+	 * @param array $args Debug arguments.
+	 */
+	protected function _debug( $message, $args = null ) {
+		$message = '[Factory] ' . $message;
+
+		if ( func_num_args() == 1 ) {
+			Debug::debug( $message );
+		} else {
+			$args = array_slice( func_get_args(), 1 );
+			Debug::debugf( $message, $args );
+		}
 	}
 
 	/**
@@ -135,7 +156,7 @@ abstract class Factory {
 		if ( is_wp_error( $generated_args ) ) {
 			return $generated_args;
 		}
-		
+
 		$created = $this->_createObject( $generated_args );
 		if ( ! $created || is_wp_error( $created ) ) {
 			return $created;
@@ -152,7 +173,7 @@ abstract class Factory {
 		if ( ! empty( $created ) && !is_wp_error( $created ) ) {
 			$this->_objects[] = $created;
 		}
-		
+
 		return $created;
 	}
 
@@ -171,7 +192,7 @@ abstract class Factory {
 		if ( ! $object_id || is_wp_error( $object_id ) ) {
 			return $object_id;
 		}
-		
+
 		return $this->getObjectById( $object_id );
 	}
 
@@ -191,7 +212,7 @@ abstract class Factory {
 		for ( $i = 0; $i < $count; $i++ ) {
 			$results[] = $this->create( $args, $definitions );
 		}
-		
+
 		return $results;
 	}
 
@@ -212,7 +233,7 @@ abstract class Factory {
 
 		// delete object and remove it from the objects list
 		$deleted = $this->_deleteObject( $object );
-		if ( $deleted && !is_wp_error( $deleted ) ) {
+		if ( $deleted && ! is_wp_error( $deleted ) ) {
 			$index = array_search( $object, $this->_objects );
 			if ( false !== $index ) {
 				unset( $this->_objects[ $index ] );
@@ -262,7 +283,7 @@ abstract class Factory {
 				return new \WP_Error( 'invalid_argument', 'Factory default value should be either a scalar or an generator object.' );
 			}
 		}
-		
+
 		return $args;
 	}
 
@@ -281,7 +302,7 @@ abstract class Factory {
 		foreach ( $callbacks as $field => $callback ) {
 			$updated_fields[ $field ] = $callback->call( $created );
 		}
-		
+
 		return $updated_fields;
 	}
 

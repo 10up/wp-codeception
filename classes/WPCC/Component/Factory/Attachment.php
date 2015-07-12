@@ -40,7 +40,19 @@ class Attachment extends Post {
 	 * @return int The newly created attachment's ID on success, otherwise 0.
 	 */
 	protected function _createObject( $args = array() ) {
-		return wp_insert_attachment( $args );
+		$attachment_id = wp_insert_attachment( $args );
+		if ( $attachment_id ) {
+			$this->_debug(
+				'Generated attachment ID: %d (file: %s)',
+				$attachment_id,
+				! empty( $args['file'] ) ? $args['file'] : 'not-provided'
+			);
+		} else {
+			$this->_debug( 'Attachment generation failed' );
+		}
+
+
+		return $attachment_id;
 	}
 
 }

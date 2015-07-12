@@ -57,7 +57,21 @@ class User extends \WPCC\Component\Factory {
 	 * @return int|\WP_Error The newly created user's ID on success, otherwise a WP_Error object.
 	 */
 	protected function _createObject( $args ) {
-		return wp_insert_user( $args );
+		$user_id = wp_insert_user( $args );
+		if ( $user_id && ! is_wp_error( $user_id ) ) {
+			$this->_debug( 'Generated user with ID: ' . $user_id );
+		} elseif ( is_wp_error( $user_id ) ) {
+			$this->_debug(
+				'User generation failed with message [%s] %s',
+				$user_id->get_error_code(),
+				$user_id->get_error_message()
+			);
+		} else {
+			$this->_debug( 'User generation failed' );
+		}
+
+
+		return $user_id;
 	}
 
 	/**
@@ -72,7 +86,21 @@ class User extends \WPCC\Component\Factory {
 	 */
 	protected function _updateObject( $user_id, $fields ) {
 		$fields['ID'] = $user_id;
-		return wp_update_user( $fields );
+		$updated = wp_update_user( $fields );
+		if ( $updated && ! is_wp_error( $updated ) ) {
+			Debug::debugf( 'Updated user ' . $user_id );
+		} elseif ( is_wp_error( $updated ) ) {
+			Debug::debugf(
+				'Update failed for user %d with message [%s] %s',
+				$user_id,
+				$updated->get_error_code(),
+				$updated->get_error_message()
+			);
+		} else {
+			Debug::debugf( 'Update failed for user ' . $user_id );
+		}
+
+		return $updated;
 	}
 
 	/**
@@ -94,7 +122,13 @@ class User extends \WPCC\Component\Factory {
 			? wpmu_delete_user( $user_id )
 			: wp_delete_user( $user_id );
 
-		return ! empty( $deleted ) && ! is_wp_error( $deleted );
+		if ( $deleted ) {
+			$this->_debug( 'Deleted user with ID: ' . $user_id );
+			return true;
+		}
+
+		$this->_debug( 'User removal failed for %s user', $user_id );
+		return false;
 	}
 
 	/**
