@@ -88,16 +88,16 @@ class User extends \WPCC\Component\Factory {
 		$fields['ID'] = $user_id;
 		$updated = wp_update_user( $fields );
 		if ( $updated && ! is_wp_error( $updated ) ) {
-			Debug::debugf( 'Updated user ' . $user_id );
+			$this->_debug( 'Updated user ' . $user_id );
 		} elseif ( is_wp_error( $updated ) ) {
-			Debug::debugf(
+			$this->_debug(
 				'Update failed for user %d with message [%s] %s',
 				$user_id,
 				$updated->get_error_code(),
 				$updated->get_error_message()
 			);
 		} else {
-			Debug::debugf( 'Update failed for user ' . $user_id );
+			$this->_debug( 'Update failed for user ' . $user_id );
 		}
 
 		return $updated;
@@ -127,7 +127,7 @@ class User extends \WPCC\Component\Factory {
 			return true;
 		}
 
-		$this->_debug( 'User removal failed for %s user', $user_id );
+		$this->_debug( 'User removal failed for ID: ' . $user_id );
 		return false;
 	}
 

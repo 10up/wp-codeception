@@ -55,7 +55,7 @@ class Term extends \WPCC\Component\Factory {
 	 */
 	public function __construct( $taxonomy = null ) {
 		$this->_taxonomy = $taxonomy ?: self::DEFAULT_TAXONOMY;
-		
+
 		parent::__construct( array(
 			'name'        => new Sequence( 'Term %s' ),
 			'taxonomy'    => $this->_taxonomy,
@@ -76,9 +76,17 @@ class Term extends \WPCC\Component\Factory {
 		$args = array_merge( array( 'taxonomy' => $this->_taxonomy ), $args );
 		$term_id_pair = wp_insert_term( $args['name'], $args['taxonomy'], $args );
 		if ( is_wp_error( $term_id_pair ) ) {
+			$this->_debug(
+				'Term generation failed with message [%s] %s',
+				$term_id_pair->get_error_code(),
+				$term_id_pair->get_error_messages()
+			);
+
 			return $term_id_pair;
 		}
-		
+
+		$this->_debug( 'Generated term ID: ' . $term_id_pair['term_id'] );
+
 		return $term_id_pair['term_id'];
 	}
 
@@ -95,12 +103,21 @@ class Term extends \WPCC\Component\Factory {
 	protected function _updateObject( $term, $fields ) {
 		$fields = array_merge( array( 'taxonomy' => $this->_taxonomy ), $fields );
 		$taxonomy = is_object( $term ) ? $term->taxonomy : $this->_taxonomy;
-		
+
 		$term_id_pair = wp_update_term( $term, $taxonomy, $fields );
 		if ( is_wp_error( $term_id_pair ) ) {
+			$this->_debug(
+				'Update failed for term %d with message [%s] %s',
+				is_object( $term ) ? $term->term_id : $term,
+				$term_id_pair->get_error_code(),
+				$term_id_pair->get_error_message()
+			);
+
 			return $term_id_pair;
 		}
-		
+
+		$this->_debug( 'Updated term ' . $term_id_pair['term_id'] );
+
 		return $term_id_pair['term_id'];
 	}
 
@@ -120,8 +137,21 @@ class Term extends \WPCC\Component\Factory {
 		}
 
 		$deleted = wp_delete_term( $term_id, $this->_taxonomy );
+		if ( $deleted && ! is_wp_error( $deleted ) ) {
+			$this->_debug( 'Deleted term with ID: ' . $term_id );
+			return true;
+		} elseif ( is_wp_error( $deleted ) ) {
+			$this->_debug(
+				'Removal failed for term %d with message [%s] %s',
+				$term_id,
+				$deleted->get_error_code(),
+				$deleted->get_error_message()
+			);
+		} else {
+			$this->_debug( 'Term removal failed for ID: ' . $term_id );
+		}
 
-		return ! empty( $deleted ) && !is_wp_error( $deleted );
+		return false;
 	}
 
 	/**

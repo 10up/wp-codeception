@@ -89,16 +89,16 @@ class Post extends \WPCC\Component\Factory {
 		$fields['ID'] = $post_id;
 		$updated = wp_update_post( $fields );
 		if ( $updated && ! is_wp_error( $updated ) ) {
-			Debug::debugf( 'Updated post ' . $post_id );
+			$this->_debug( 'Updated post ' . $post_id );
 		} elseif ( is_wp_error( $updated ) ) {
-			Debug::debugf(
+			$this->_debug(
 				'Update failed for post %d with message [%s] %s',
 				$post_id,
 				$updated->get_error_code(),
 				$updated->get_error_message()
 			);
 		} else {
-			Debug::debugf( 'Update failed for post ' . $post_id );
+			$this->_debug( 'Update failed for post ' . $post_id );
 		}
 
 		return $updated;
@@ -125,7 +125,7 @@ class Post extends \WPCC\Component\Factory {
 			return true;
 		}
 
-		$this->_debug( 'Post removal failed for %s post', $post_id );
+		$this->_debug( 'Post removal failed for ID: ' . $post_id );
 		return false;
 	}
 

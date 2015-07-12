@@ -58,7 +58,20 @@ class Comment extends \WPCC\Component\Factory {
 	 * @return int|boolean The newly created comment's ID on success, otherwise FALSE.
 	 */
 	protected function _createObject( $args ) {
-		return wp_insert_comment( $this->_addSlashesDeep( $args ) );
+		$comment_id = wp_insert_comment( $this->_addSlashesDeep( $args ) );
+		if ( $comment_id && ! is_wp_error( $comment_id ) ) {
+			$this->_debug( 'Generated comment ID: ' . $comment_id );
+		} elseif ( is_wp_error( $comment_id ) ) {
+			$this->_debug(
+				'Comment generation failed with message [%s] %s',
+				$comment_id->get_error_code(),
+				$comment_id->get_error_messages()
+			);
+		} else {
+			$this->_debug( 'Comment generation failed' );
+		}
+
+		return $comment_id;
 	}
 
 	/**
@@ -73,7 +86,14 @@ class Comment extends \WPCC\Component\Factory {
 	 */
 	protected function _updateObject( $comment_id, $fields ) {
 		$fields['comment_ID'] = $comment_id;
-		return (bool) wp_update_comment( $this->_addSlashesDeep( $fields ) );
+		$updated = (bool) wp_update_comment( $this->_addSlashesDeep( $fields ) );
+		if ( $updated ) {
+			$this->_debug( 'Updated comment ' . $comment_id );
+		} else {
+			$this->_debug( 'Update failed for comment ' . $comment_id );
+		}
+
+		return $updated;
 	}
 
 	/**
@@ -92,8 +112,13 @@ class Comment extends \WPCC\Component\Factory {
 		}
 
 		$deleted = wp_delete_comment( $comment_id, true );
+		if ( $deleted ) {
+			$this->_debug( 'Deleted comment with ID: ' . $comment_id );
+			return true;
+		}
 
-		return ! empty( $deleted ) && ! is_wp_error( $deleted );
+		$this->_debug( 'Comment removal failed for ID: ' . $comment_id );
+		return false;
 	}
 
 	/**
@@ -125,5 +150,5 @@ class Comment extends \WPCC\Component\Factory {
 	public function getObjectById( $comment_id ) {
 		return get_comment( $comment_id );
 	}
-	
+
 }
