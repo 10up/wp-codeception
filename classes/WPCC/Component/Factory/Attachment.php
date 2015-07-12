@@ -63,7 +63,18 @@ class Attachment extends Post {
 			);
 
 			$this->_debug( 'Generating attachment metadata' );
-			wp_generate_attachment_metadata( $attachment_id, $args['file'] );
+			$metadata = wp_generate_attachment_metadata( $attachment_id, $args['file'] );
+			if ( is_wp_error( $metadata ) ) {
+				$this->_debug(
+					'Attachment metadata generation failed with error [%s] %s',
+					$metadata->get_error_code(),
+					$metadata->get_error_message()
+				);
+			} elseif ( empty( $metadata ) ) {
+				$this->_debug( 'Attachment metadata generation failed' );
+			} else {
+				wp_update_attachment_metadata( $attachment_id, $metadata );
+			}
 		} else {
 			$this->_debug( 'Attachment generation failed' );
 		}
