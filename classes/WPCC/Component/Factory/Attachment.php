@@ -39,8 +39,8 @@ class Attachment extends Post {
 	 * @param array $args The array of arguments to use during a new attachment creation.
 	 * @return int The newly created attachment's ID on success, otherwise 0.
 	 */
-	protected function _createObject( $file, $parent = 0, $args = array() ) {
-		return wp_insert_attachment( $args, $file, $parent );
+	protected function _createObject( $args = array() ) {
+		return wp_insert_attachment( $args );
 	}
-	
+
 }
