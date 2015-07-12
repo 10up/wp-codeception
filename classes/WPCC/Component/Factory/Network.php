@@ -71,7 +71,19 @@ class Network extends \WPCC\Component\Factory {
 			? get_userdata( $args['user'] )->user_email
 			: $test_email;
 
-		populate_network( $args['network_id'], $args['domain'], $email, $args['title'], $args['path'], $args['subdomain_install'] );
+		$network = populate_network( $args['network_id'], $args['domain'], $email, $args['title'], $args['path'], $args['subdomain_install'] );
+
+		if ( $network && ! is_wp_error( $network ) ) {
+			$this->_debug( 'Generated network ID: ' . $args['network_id'] );
+		} elseif ( is_wp_error( $network ) ) {
+			$this->_debug(
+				'Network generation failed with message [%s] %s',
+				$network->get_error_code(),
+				$network->get_error_messages()
+			);
+		} else {
+			$this->_debug( 'Network generation failed' );
+		}
 
 		return $args['network_id'];
 	}
@@ -106,19 +118,23 @@ class Network extends \WPCC\Component\Factory {
 		$network_blog = wp_get_sites( array( 'network_id' => $network_id ) );
 		if ( ! empty( $network_blog ) ) {
 			$suppress = $wpdb->suppress_errors();
-			
+
 			foreach ( $network_blog as $blog ) {
 				wpmu_delete_blog( $blog->blog_id, true );
 			}
-	
+
 			$wpdb->suppress_errors( $suppress );
 		}
 
 		$deleted = $wpdb->delete( $wpdb->site, array( 'id' => $network_id ), array( '%d' ) );
 		if ( $deleted ) {
 			$wpdb->delete( $wpdb->sitemeta, array( 'site_id' => $network_id ), array( '%d' ) );
+			$this->_debug( 'Deleted network with ID: ' . $network_id );
+
 			return true;
 		}
+
+		$this->_debug( 'Failed to delet network with ID: ' . $network_id );
 
 		return false;
 	}
@@ -135,4 +151,5 @@ class Network extends \WPCC\Component\Factory {
 	public function getObjectById( $network_id ) {
 		return wp_get_network( $network_id );
 	}
+
 }

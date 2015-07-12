@@ -44,7 +44,7 @@ class Blog extends \WPCC\Component\Factory {
 	 */
 	public function __construct() {
 		global $current_site, $base;
-		
+
 		parent::__construct( array(
 			'domain'  => $current_site->domain,
 			'path'    => new Sequence( $base . 'testpath%s' ),
@@ -73,6 +73,18 @@ class Blog extends \WPCC\Component\Factory {
 		$suppress = $wpdb->suppress_errors();
 		$blog = wpmu_create_blog( $args['domain'], $args['path'], $args['title'], $user_id, $meta, $args['site_id'] );
 		$wpdb->suppress_errors( $suppress );
+
+		if ( $blog && ! is_wp_error( $blog ) ) {
+			$this->_debug( 'Generated blog ID: ' . $blog );
+		} elseif ( is_wp_error( $blog ) ) {
+			$this->_debug(
+				'Blog generation failed with message [%s] %s',
+				$blog->get_error_code(),
+				$blog->get_error_messages()
+			);
+		} else {
+			$this->_debug( 'Blog generation failed' );
+		}
 
 		return $blog;
 	}
@@ -103,10 +115,12 @@ class Blog extends \WPCC\Component\Factory {
 	 */
 	protected function _deleteObject( $blog_id ) {
 		global $wpdb;
-		
+
 		$suppress = $wpdb->suppress_errors();
 		wpmu_delete_blog( $blog_id, true );
 		$wpdb->suppress_errors( $suppress );
+
+		$this->_debug( 'Deleted blog with ID: ' . $blog_id );
 
 		return true;
 	}
@@ -123,4 +137,5 @@ class Blog extends \WPCC\Component\Factory {
 	public function getObjectById( $blog_id ) {
 		return get_blog_details( $blog_id, false );
 	}
+
 }
