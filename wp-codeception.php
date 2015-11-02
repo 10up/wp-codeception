@@ -5,7 +5,7 @@
  * Description: Registers WP-CLI commands which allow you to execute Codeception tests.
  * Author: 10up Inc
  * Author URI: https://10up.com/
- * Version: 1.0.2
+ * Version: 1.0.3
  * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
@@ -41,7 +41,7 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 
 	// Define constants
-	define( 'WPCC_VERSION', '1.0.2' );
+	define( 'WPCC_VERSION', '1.0.3' );
 	define( 'WPCC_ABSPATH', __DIR__ );
 	define( 'WP_CODECEPTION_LOADED', true );
 
