@@ -8,8 +8,8 @@ We're working towards supporting all of [Codeceptions commands](http://codecepti
 
 #### Install required node modules and composer dependencies
 
-We'll run our commands from within [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV) because WP CLI, Node, and Composer are already installed for us there. 
- 
+We'll run our commands from within [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV) because WP CLI, Node, and Composer are already installed for us there.
+
 ```Bash
 $ vagrant up
 $ vagrant ssh
@@ -24,7 +24,7 @@ Afterwards you'll have a new `vendor` directory within your `plugins/wp-codecept
 
 #### Install the test suite
 
-See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information. 
+See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information.
 
 ```Bash
 # You'll create the test suite in your own plugin or theme directory..
@@ -32,10 +32,10 @@ $ cd /srv/www/yoursite/htdocs/wp-content/{your plugin or theme directory}
 $ wp codeception bootstrap
 ```
 
-Afterwards you'll have a new `tests` directory within your plugin or theme directory. This is your new test suite, and where you'll write all your tests. 
+Afterwards you'll have a new `tests` directory within your plugin or theme directory. This is your new test suite, and where you'll write all your tests.
 
 ## Writing Tests
-You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: [Acceptance](http://codeception.com/docs/04-AcceptanceTests), [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit](http://codeception.com/docs/06-UnitTests) testing. If you look within the new `tests` directory you'll see three config files; one for each test framework (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish.
+You can write tests using any of the three [Codeception](http://codeception.com/) testing frameworks: [Acceptance](http://codeception.com/docs/03-AcceptanceTests), [Functional](http://codeception.com/docs/04-FunctionalTests) and [Unit](http://codeception.com/docs/05-UnitTests) testing. If you look within the new `tests` directory you'll see three config files; one for each test framework (acceptance.suite.yml, functional.suite.yml, unit.suite.yml). Edit these files as you wish.
 
 #### Generate your first test
 ```Bash
@@ -46,14 +46,14 @@ $ wp codeception generate-(cept|cest) (acceptance|functional|unit) MyTestName
 $ wp codeception generate-cept acceptance LoginTest
 ```
 
-Afterwards you'll have a new file in your plugin or theme directory `tests/acceptance/LoginTest.php`, where you can write your first test. Remember, any Codeception test will work here! For example, you could run any of the [acceptance test examples](http://codeception.com/docs/04-AcceptanceTests) mentioned in the Codeception documentation. Likewise, the same goes for [Functional](http://codeception.com/docs/05-FunctionalTests) and [Unit tests](http://codeception.com/docs/06-UnitTests).
+Afterwards you'll have a new file in your plugin or theme directory `tests/acceptance/LoginTest.php`, where you can write your first test. Remember, any Codeception test will work here! For example, you could run any of the [acceptance test examples](http://codeception.com/docs/03-AcceptanceTests) mentioned in the Codeception documentation. Likewise, the same goes for [Functional](http://codeception.com/docs/04-FunctionalTests) and [Unit tests](http://codeception.com/docs/05-UnitTests).
 
 #### Example: Writing a Login Acceptance Test
 ```PHP
 <?php
 
 // Make sure you've added your site URL to acceptance.suite.yml
-// @see http://codeception.com/docs/04-AcceptanceTests#PHP-Browser
+// @see http://codeception.com/docs/03-AcceptanceTests#PHP-Browser
 $I = new AcceptanceTester( $scenario );
 $I->wantTo( 'Ensure WordPress Login Works' );
 
@@ -88,8 +88,8 @@ $ wp selenium stop
 ```
 
 #### Run
-You'll use the `run` command to execute your tests from within your plugin or theme directory (where you ran the bootstrap). We've implemented most of the [Codeception 'run' command](http://codeception.com/docs/reference/Commands#Run) arguments, but if you find one we've missed please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)! 
- 
+You'll use the `run` command to execute your tests from within your plugin or theme directory (where you ran the bootstrap). We've implemented most of the [Codeception 'run' command](http://codeception.com/docs/reference/Commands#Run) arguments, but if you find one we've missed please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)!
+
 ```Bash
 # You should be in the plugin or theme directory where you ran the bootstrap
 $ wp codeception run
@@ -105,7 +105,7 @@ Codeception PHP Testing Framework v2.0.11
 Powered by PHPUnit 4.5.1 by Sebastian Bergmann and contributors.
 
   Rebuilding AcceptanceTester...
-  
+
 Acceptance-production Tests (1) ---------------------------------
 Modules: WebDriver, WordPress, AcceptanceHelper
 -----------------------------------------------------------------
