@@ -5,7 +5,7 @@
  * Description: Registers WP-CLI commands which allow you to execute Codeception tests.
  * Author: 10up Inc
  * Author URI: https://10up.com/
- * Version: 1.0.2
+ * Version: 1.0.3
  * License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
@@ -41,7 +41,7 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 
 	// Define constants
-	define( 'WPCC_VERSION', '1.0.2' );
+	define( 'WPCC_VERSION', '1.0.3' );
 	define( 'WPCC_ABSPATH', __DIR__ );
 	define( 'WP_CODECEPTION_LOADED', true );
 
@@ -66,7 +66,7 @@ if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
  * and used in the depths of the framework, so we have to load it here.
  */
 
-if ( ! function_exists( 'codecept_debug' ) ) {
+if ( ! function_exists( 'codecept_debug' ) ) :
 
 	/**
 	 * Registers debug message which will be printed if --debug argument is passed to the command.
@@ -79,9 +79,9 @@ if ( ! function_exists( 'codecept_debug' ) ) {
 		\Codeception\Util\Debug::debug( $data );
 	}
 
-}
+endif;
 
-if ( ! function_exists( 'codecept_root_dir' ) ) {
+if ( ! function_exists( 'codecept_root_dir' ) ) :
 
 	/**
 	 * Returns absolute path to the requested object which is expected to be in
@@ -96,9 +96,9 @@ if ( ! function_exists( 'codecept_root_dir' ) ) {
 		return \Codeception\Configuration::projectDir() . $appendPath;
 	}
 
-}
+endif;
 
-if ( ! function_exists( 'codecept_output_dir' ) ) {
+if ( ! function_exists( 'codecept_output_dir' ) ) :
 
 	/**
 	 * Returns absolute path to the requested object which is expected to be in
@@ -113,9 +113,9 @@ if ( ! function_exists( 'codecept_output_dir' ) ) {
 		return \Codeception\Configuration::outputDir() . $appendPath;
 	}
 
-}
+endif;
 
-if ( ! function_exists( 'codecept_log_dir' ) ) {
+if ( ! function_exists( 'codecept_log_dir' ) ) :
 
 	/**
 	 * Returns absolute path to the requested object which is expected to be in
@@ -130,9 +130,9 @@ if ( ! function_exists( 'codecept_log_dir' ) ) {
 		return \Codeception\Configuration::outputDir() . $appendPath;
 	}
 
-}
+endif;
 
-if ( ! function_exists( 'codecept_data_dir' ) ) {
+if ( ! function_exists( 'codecept_data_dir' ) ) :
 
 	/**
 	 * Returns absolute path to the requested object which is expected to be in
@@ -147,4 +147,4 @@ if ( ! function_exists( 'codecept_data_dir' ) ) {
 		return \Codeception\Configuration::dataDir() . $appendPath;
 	}
 
-}
+endif;
