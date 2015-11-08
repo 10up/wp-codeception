@@ -43,6 +43,7 @@ If you want to add it as a dependency to your plugin or theme, you will need to 
         }
     },
     ...
+}
 ```
 
 Now `composer/installers` will know to install wordpress plugins into *vendor* folder. The final step which you need to do is to update your `autoload` section and add `wp-codeception.php` file to the autoload files list.
