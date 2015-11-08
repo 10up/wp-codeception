@@ -22,6 +22,47 @@ $ composer install
 
 Afterwards you'll have a new `vendor` directory within your `plugins/wp-codeception` directory which contains all the code libraries we're dependant on.
 
+#### Install as a composer dependency
+
+There is an alternative way to install this plugin. You can add it as a composer dependency for your project. To do it, run following command in your terminal:
+
+```Bash
+$ composer require 10up/wp-codeception
+```
+
+This command will install the plugin and all its dependencies for your project. Please, pay attention that if you already use [composer/installers](https://github.com/composer/installers) dependency in your project, then `wp-codeception` will be installed into `<PROJECT_DIR>/wp-content/plugins/wp-codeception/` folder. It happens, because `wp-codeception` has `wordpress-plugin` type and will be processed by `composer/installers` accordingly (read its documentation for more details).
+
+If you want to add it as a dependency to your plugin or theme, you will need to update your `composer.json` file and tell it where to install `wp-codeception`. You can achieve it by providing `installer-paths` instructions like in the snippet below.
+
+```Bash
+{
+    ...,
+    "extra": {
+        "installer-paths": {
+            "vendor/{$name}/": ["type:wordpress-plugin"]
+        }
+    },
+    ...
+```
+
+Now `composer/installers` will know to install wordpress plugins into *vendor* folder. The final step which you need to do is to update your `autoload` section and add `wp-codeception.php` file to the autoload files list.
+
+```Bash
+{
+    ...,
+    "autoload": {
+        "psr-X": {
+            ...
+        },
+        "files": [
+            ...,
+            "vendor/wp-codeception/wp-codeception.php"
+        ]
+    },
+    ...
+}
+```
+
 #### Install the test suite
 
 See the [Codeception bootstrapping documentation](http://codeception.com/docs/reference/Commands#Bootstrap) for further information.
