@@ -41,29 +41,25 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	 * @param string $actor The actor name.
 	 */
 	protected function createAcceptanceSuite( $actor = 'Acceptance' ) {
-		$suiteConfig = array(
-			'class_name' => $actor . $this->actorSuffix,
-			'modules'    => array(
-				'enabled' => array( 
-					'WebDriver',
-					'WordPress',
-					"{$actor}Helper",
-				),
-				'config'  => array(
-					'WebDriver' => array(
-						'browser' => 'phantomjs',
-					),
-				),
-			),
-		);
+		$namespace = trim( $this->namespace, '\\' );
 
-		$str  = "# Codeception Test Suite Configuration\n\n";
-		$str .= "# suite for acceptance tests.\n";
-		$str .= "# perform tests in browser using the WebDriver or PhpBrowser.\n";
-		$str .= "# If you need both WebDriver and PHPBrowser tests - create a separate suite.\n\n";
+		$str = <<<EOF
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-		$str .= Yaml::dump( $suiteConfig, 5 );
-		$this->createSuite( 'acceptance', $actor, $str );
+class_name: {$actor}{$this->actorSuffix}
+modules:
+    enabled:
+        - WebDriver:
+            browser: phantomjs
+        - \WPCC\Module\WordPress
+        - \\{$namespace}\Helper\Acceptance
+EOF;
+
+        $this->createSuite( 'acceptance', $actor, $str );
 	}
 
 	/**
@@ -75,18 +71,22 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	 * @param string $actor The actor name.
 	 */
 	protected function createFunctionalSuite( $actor = 'Functional' ) {
-		$suiteConfig = array(
-			'class_name' => $actor . $this->actorSuffix,
-			'modules'    => array( 
-				'enabled' => array( 'WordPress', $actor . 'Helper' )
-			),
-		);
+		$namespace = trim( $this->namespace, '\\' );
 
-		$str  = "# Codeception Test Suite Configuration\n\n";
-		$str .= "# suite for functional (integration) tests.\n";
-		$str .= "# emulate web requests and make application process them.\n\n";
-		$str .= Yaml::dump( $suiteConfig, 2 );
-		
+        $str = <<<EOF
+# Codeception Test Suite Configuration
+#
+# Suite for functional (integration) tests
+# Emulate web requests and make application process them
+
+class_name: {$actor}{$this->actorSuffix}
+modules:
+    enabled:
+        # add framework module here
+        - \WPCC\Module\WordPress
+        - \\{$namespace}\Helper\Functional
+EOF;
+
 		$this->createSuite( 'functional', $actor, $str );
 	}
 
@@ -98,27 +98,36 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	 * @access public
 	 */
 	public function createGlobalConfig() {
-		$basicConfig = array(
-			'actor' => $this->actorSuffix,
-			'paths' => array(
-				'tests'   => 'tests',
-				'log'     => $this->logDir,
-				'data'    => $this->dataDir,
-				'helpers' => $this->helperDir
-			),
-			'settings' => array(
-				'bootstrap'    => '_bootstrap.php',
-				'colors'       => strtoupper( substr( PHP_OS, 0, 3 ) ) != 'WIN',
-				'memory_limit' => WP_MAX_MEMORY_LIMIT
-			),
-		);
+        $basicConfig = array(
+            'actor' => $this->actorSuffix,
+            'paths' => array(
+                'tests'   => 'tests',
+                'log'     => $this->logDir,
+                'data'    => $this->dataDir,
+                'support' => $this->supportDir,
+                'envs'    => $this->envsDir,
+            ),
+            'settings' => array(
+                'bootstrap'    => '_bootstrap.php',
+                'colors'       => strtoupper( substr( PHP_OS, 0, 3 ) ) != 'WIN',
+                'memory_limit' => WP_MAX_MEMORY_LIMIT,
+            ),
+            'extensions' => array(
+                'enabled' => array( 'Codeception\Extension\RunFailed' ),
+            ),
+            'modules'  => array(
+                'config' => array(
+                ),
+            ),
+        );
 
-		$str = Yaml::dump( $basicConfig, 4 );
-		if ( $this->namespace ) {
-			$str = "namespace: {$this->namespace} \n" . $str;
-		}
-		
-		file_put_contents( 'codeception.yml', $str );
+        $str = Yaml::dump( $basicConfig, 4 );
+        if ( $this->namespace ) {
+            $namespace = rtrim( $this->namespace, '\\' );
+            $str = "namespace: $namespace\n" . $str;
+        }
+
+        file_put_contents( 'codeception.yml', $str );
 	}
 
 	/**
@@ -129,10 +138,11 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 	 * @access protected
 	 */
 	protected function createDirs() {
-		@mkdir( 'tests' );
+        @mkdir( 'tests' );
 		@mkdir( $this->logDir );
 		@mkdir( $this->dataDir );
-		@mkdir( $this->helperDir );
+		@mkdir( $this->supportDir );
+		@mkdir( $this->envsDir );
 	}
 
 }
