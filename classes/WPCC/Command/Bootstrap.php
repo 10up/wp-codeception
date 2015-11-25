@@ -115,10 +115,6 @@ EOF;
             'extensions' => array(
                 'enabled' => array( 'Codeception\Extension\RunFailed' ),
             ),
-            'modules'  => array(
-                'config' => array(
-                ),
-            ),
         );
 
         $str = Yaml::dump( $basicConfig, 4 );
