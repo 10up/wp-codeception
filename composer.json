@@ -19,7 +19,7 @@
 	],
 	"require": {
 		"php": ">=5.5.0",
-		"codeception/codeception": "2.1.4",
+		"codeception/codeception": "2.1.5",
 		"fzaninotto/faker": "1.5.*@dev",
 		"composer/installers": "^1.0"
 	},
