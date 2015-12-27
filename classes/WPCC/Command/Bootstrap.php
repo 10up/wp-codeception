@@ -59,7 +59,7 @@ modules:
         - \\{$namespace}\Helper\Acceptance
 EOF;
 
-        $this->createSuite( 'acceptance', $actor, $str );
+		$this->createSuite( 'acceptance', $actor, $str );
 	}
 
 	/**
@@ -73,7 +73,7 @@ EOF;
 	protected function createFunctionalSuite( $actor = 'Functional' ) {
 		$namespace = trim( $this->namespace, '\\' );
 
-        $str = <<<EOF
+		$str = <<<EOF
 # Codeception Test Suite Configuration
 #
 # Suite for functional (integration) tests
@@ -98,32 +98,32 @@ EOF;
 	 * @access public
 	 */
 	public function createGlobalConfig() {
-        $basicConfig = array(
-            'actor' => $this->actorSuffix,
-            'paths' => array(
-                'tests'   => 'tests',
-                'log'     => $this->logDir,
-                'data'    => $this->dataDir,
-                'support' => $this->supportDir,
-                'envs'    => $this->envsDir,
-            ),
-            'settings' => array(
-                'bootstrap'    => '_bootstrap.php',
-                'colors'       => strtoupper( substr( PHP_OS, 0, 3 ) ) != 'WIN',
-                'memory_limit' => WP_MAX_MEMORY_LIMIT,
-            ),
-            'extensions' => array(
-                'enabled' => array( 'Codeception\Extension\RunFailed' ),
-            ),
-        );
+		$basicConfig = array(
+			'actor' => $this->actorSuffix,
+			'paths' => array(
+				'tests'   => 'tests',
+				'log'     => $this->logDir,
+				'data'    => $this->dataDir,
+				'support' => $this->supportDir,
+				'envs'    => $this->envsDir,
+			),
+			'settings' => array(
+				'bootstrap'    => '_bootstrap.php',
+				'colors'       => strtoupper( substr( PHP_OS, 0, 3 ) ) != 'WIN',
+				'memory_limit' => WP_MAX_MEMORY_LIMIT,
+			),
+			'extensions' => array(
+				'enabled' => array( 'Codeception\Extension\RunFailed' ),
+			),
+		);
 
-        $str = Yaml::dump( $basicConfig, 4 );
-        if ( $this->namespace ) {
-            $namespace = rtrim( $this->namespace, '\\' );
-            $str = "namespace: $namespace\n" . $str;
-        }
+		$str = Yaml::dump( $basicConfig, 4 );
+		if ( $this->namespace ) {
+			$namespace = rtrim( $this->namespace, '\\' );
+			$str = "namespace: $namespace\n" . $str;
+		}
 
-        file_put_contents( 'codeception.yml', $str );
+		file_put_contents( 'codeception.yml', $str );
 	}
 
 	/**
@@ -134,7 +134,7 @@ EOF;
 	 * @access protected
 	 */
 	protected function createDirs() {
-        @mkdir( 'tests' );
+		@mkdir( 'tests' );
 		@mkdir( $this->logDir );
 		@mkdir( $this->dataDir );
 		@mkdir( $this->supportDir );
