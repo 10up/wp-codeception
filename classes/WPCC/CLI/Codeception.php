@@ -88,25 +88,25 @@ class Codeception extends \WP_CLI_Command {
 	 *
 	 * <coverage-html>
 	 * : Tells to generate CodeCoverage HTML report in path (default: "coverage").
-	 * 
+	 *
 	 * <coverage-xml>
 	 * : Tells to generate CodeCoverage XML report in file (default: "coverage.xml").
-	 * 
+	 *
 	 * <coverage-text>
 	 * : Tells to generate CodeCoverage text report in file (default: "coverage.txt").
-	 * 
+	 *
 	 * <no-exit>
 	 * : Tells to not finish with exit code.
-	 * 
+	 *
 	 * <env>
 	 * : Environment to use during tests execution.
-	 * 
+	 *
 	 * <fail-fast>
 	 * : Tells to stop after first failure.
 	 *
 	 * <quiet>
 	 * : Tells to not output any message.
-	 * 
+	 *
 	 * <ansi>
 	 * : Forces ANSI output.
 	 *
@@ -148,7 +148,7 @@ class Codeception extends \WP_CLI_Command {
 	 */
 	private function _execute_command() {
 		$app = new Application( 'Codeception', \Codeception\Codecept::VERSION );
-		$app->add( new \WPCC\Command\Build( 'build' ) );
+		$app->add( new \Codeception\Command\Build( 'build' ) );
 		$app->add( new \Codeception\Command\Console( 'console' ) );
 		$app->add( new \WPCC\Command\Bootstrap( 'bootstrap' ) );
 		$app->add( new \Codeception\Command\GenerateCept( 'generate-cept' ) );
