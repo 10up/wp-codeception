@@ -48,9 +48,12 @@ if ( ! defined( 'WP_CODECEPTION_LOADED' ) ) {
 	// See if the codeception library is available, if not, try to load it
 	if ( ! class_exists( 'Codeception\Codecept' ) ) {
 		try {
+			if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+				throw new Exception( 'You must run composer first if running this as a standalone plugin' );
+			}
 			require_once __DIR__ . '/vendor/autoload.php';
 		} catch ( Exception $e ) {
-			WP_CLI::error( 'You must run composer first if running this as a standalone plugin' );
+			WP_CLI::error( $e->getMessage() );
 		}
 	}
 
