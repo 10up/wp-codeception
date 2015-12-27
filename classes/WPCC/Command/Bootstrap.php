@@ -53,7 +53,7 @@ class Bootstrap extends \Codeception\Command\Bootstrap {
 class_name: {$actor}{$this->actorSuffix}
 modules:
     enabled:
-        - WebDriver:
+        - \WPCC\Module\WebDriver:
             browser: phantomjs
         - \WPCC\Module\WordPress
         - \\{$namespace}\Helper\Acceptance
