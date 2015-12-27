@@ -15,9 +15,8 @@ $ vagrant up
 $ vagrant ssh
 $ sudo apt-get install openjdk-7-jre-headless
 $ cd /srv/www/yoursite/htdocs/wp-content/plugins/wp-codeception
-$ wp plugin activate wp-codeception
-$ npm install
 $ composer install
+$ wp plugin activate wp-codeception
 ```
 
 Afterwards you'll have a new `vendor` directory within your `plugins/wp-codeception` directory which contains all the code libraries we're dependant on.
