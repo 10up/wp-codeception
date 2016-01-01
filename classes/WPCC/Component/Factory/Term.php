@@ -59,7 +59,7 @@ class Term extends \WPCC\Component\Factory {
 		parent::__construct( array(
 			'name'        => new Sequence( 'Term %s' ),
 			'taxonomy'    => $this->_taxonomy,
-			'description' => new FakerSequence( 'paragraphs' ),
+			'description' => new FakerSequence( 'paragraph' ),
 		) );
 	}
 
