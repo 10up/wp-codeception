@@ -7,7 +7,7 @@
 		"url": ""
 	},
 	"author": "10up Inc",
-	"license": "GPLv2",
+	"license": "GPL-2.0",
 	"devDependencies": {
 		"phantomjs": "^1.9.16",
 		"selenium-server": "^2.45.0"
