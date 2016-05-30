@@ -101,7 +101,7 @@ $I->wantTo( 'Ensure WordPress Login Works' );
 // Let's start on the login page
 $I->amOnPage( wp_login_url() );
 
-// Popupate the login form's user id field
+// Populate the login form's user id field
 $I->fillField( 'input#user_login', 'YourUsername' );
 
 // Popupate the login form's password field
