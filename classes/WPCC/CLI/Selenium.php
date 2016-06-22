@@ -66,7 +66,7 @@ class Selenium extends \WP_CLI_Command {
 		$pids = trim( shell_exec( "pgrep -l -f {$selenium}" ) );
 		$pids = explode( PHP_EOL, (string) $pids );
 
-		if ( ! empty( $pids ) && count( $pids ) > 1 ) {
+		if ( ! empty( $pids ) && count( $pids ) >= 1 ) {
 			foreach ( $pids as $pid ) {
 				shell_exec( "kill -15 {$pid} > /dev/null 2>/dev/null" );
 			}
