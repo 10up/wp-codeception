@@ -1,4 +1,7 @@
 # WP Codeception
+#DEPRECIATED
+Thank you 10-UP! This project was one of the very first successful attempts to integrate Codeception with the WordPress framework. It was an inspiration to me personally, and a great beginning to TDD / BDD in WordPress. There are more advanced tools to integrate with WP that are available officially from the Codeception community. The WPWebDriver, WPloader, and WPQueries modules are now available through Composer. [Codeception for Wordpress](http://codeception.com/for/wordpress/). There are several tutorials available here: [WordPress Behavior Driven Development](https://wordpress-bdd.com/).
+
 This is a WordPress Plugin which integrates with the [Codeception](http://codeception.com/) PHP testing framework and allows you to write and run Codeception tests for WordPress via WP CLI.
 
 We're working towards supporting all of [Codeceptions commands](http://codeception.com/docs/reference/Commands). If you find one we haven't included yet, please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)!
