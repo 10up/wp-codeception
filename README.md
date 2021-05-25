@@ -1,5 +1,8 @@
 # WP Codeception
-This is a WordPress Plugin which integrates with the [Codeception](http://codeception.com/) PHP testing framework and allows you to write and run Codeception tests for WordPress via WP CLI.
+
+> This is a WordPress Plugin which integrates with the [Codeception](http://codeception.com/) PHP testing framework and allows you to write and run Codeception tests for WordPress via WP CLI.
+
+[![Support Level](https://img.shields.io/badge/support-archived-red.svg)](#support-level)
 
 We're working towards supporting all of [Codeceptions commands](http://codeception.com/docs/reference/Commands). If you find one we haven't included yet, please submit a [Pull Request](https://github.com/10up/wp-codeception/pulls)!
 
@@ -159,6 +162,10 @@ Scenario:
 * I see "Dashboard"
  PASSED
 ```
+
+## Support Level
+
+**Archived:** This project is no longer maintained by 10up. We are no longer responding to Issues or Pull Requests unless they relate to security concerns. We encourage interested developers to fork this project and make it their own!
 
 ## Like what you see?
 
